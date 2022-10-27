@@ -1,0 +1,17 @@
+bibentry(
+  header = "If using mGWAS-Explorer, or the mGWASR R package please cite:",
+  bibtype = "Article",
+  author = c(
+    person("Le", "Chang", role = c("aut", "cre")),
+    person("Jianguo", "Xia", role = "aut")
+  ),
+  title = "mGWAS-Explorer: Linking SNPs, Genes, Metabolites, and Diseases for Functional Insights",
+  year = "2022",
+  journal = "Metabolites",
+  url = "https://www.mdpi.com/2218-1989/12/6/526",
+  doi = "https://doi.org/10.3390/metabo12060526",
+  textVersion = paste(
+    "Le Chang, Guangyan Zhou, Hui Ting Ou, Jianguo Xia,",
+    "mGWAS-Explorer: Linking SNPs, Genes, Metabolites, and Diseases for Functional Insights",
+    "Metabolites 2022;12.6:526. doi: 10.3390/metabo12060526")
+)

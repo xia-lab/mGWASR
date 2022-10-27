@@ -1,0 +1,57 @@
+# -----------------------------------------------------------
+# CITATION file created with {cffr} R package, v0.3.0
+# See also: https://docs.ropensci.org/cffr/
+# -----------------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "mGWASR" in publications use:'
+type: software
+license: MIT
+title: 'mGWASR: A companion R package for the mGWAS-Explorer web server'
+version: 0.0.0.9000
+doi: 10.3390/metabo12060526
+abstract: This package contains the entire underlying R functionality of the web-based
+  tool mGWAS-Explorer.
+authors:
+- family-names: Chang
+  given-names: Le
+  email: le.chang@mail.mcgill.ca
+  orcid: https://orcid.org/0000-0002-0966-7923
+- family-names: Xia
+  given-names: Jianguo
+  email: jeff.xia@mcgill.ca
+  orcid: https://orcid.org/0000-0003-2040-2624
+preferred-citation:
+  type: article
+  title: 'mGWAS-Explorer: Linking SNPs, Genes, Metabolites, and Diseases for Functional
+    Insights'
+  authors:
+  - family-names: Chang
+    given-names: Le
+    email: le.chang@mail.mcgill.ca
+    orcid: https://orcid.org/0000-0002-0966-7923
+  - family-names: Xia
+    given-names: Jianguo
+    email: jeff.xia@mcgill.ca
+    orcid: https://orcid.org/0000-0003-2040-2624
+  year: '2022'
+  journal: Metabolites
+  url: https://www.mdpi.com/2218-1989/12/6/526
+  doi: 10.3390/metabo12060526
+contact:
+- family-names: Chang
+  given-names: Le
+  email: le.chang@mail.mcgill.ca
+  orcid: https://orcid.org/0000-0002-0966-7923
+references:
+- type: software
+  title: testthat
+  abstract: 'testthat: Unit Testing for R'
+  notes: Suggests
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2022'
+  url: https://CRAN.R-project.org/package=testthat
+  version: '>= 3.0.0'
