@@ -5,3 +5,10 @@ authors:
     href: https://www.linkedin.com/in/le--chang/
   Jianguo Xia:
     href: https://www.xialab.ca/
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem

@@ -1,6 +1,6 @@
 Package: mGWASR
 Title: A companion R package for the mGWAS-Explorer web server
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: c(
     person("Le", "Chang", email = "le.chang@mail.mcgill.ca",
       role = c("cre", "aut"),

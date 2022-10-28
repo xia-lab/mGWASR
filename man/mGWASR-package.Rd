@@ -4,12 +4,17 @@
 \name{mGWASR-package}
 \alias{mGWASR}
 \alias{mGWASR-package}
-\title{mGWASR: What the Package Does (One Line, Title Case)}
+\title{mGWASR: A companion R package for the mGWAS-Explorer web server}
 \description{
-What the package does (one paragraph).
+This package contains the entire underlying R functionality of the web-based tool mGWAS-Explorer.
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Le Chang \email{le.chang@mail.mcgill.ca} (\href{https://orcid.org/0000-0002-0966-7923}{ORCID})
+
+Authors:
+\itemize{
+  \item Jianguo Xia \email{jeff.xia@mcgill.ca} (\href{https://orcid.org/0000-0003-2040-2624}{ORCID})
+}
 
 }
 \keyword{internal}
