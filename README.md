@@ -37,7 +37,7 @@ library(pacman)
 
 # need to update the depdencies
 
-pacman::p_load(RSQLite, Cairo, fastmatch, igraph, RJSONIO, foreach, doParallel, preprocessCore, limma, edgeR, HTqPCR, genefilter, prettydoc)
+pacman::p_load(RSQLite, igraph,  BiocParallel,  pryr,  httr,  reshape,  ggplot2,  RJSONIO,  RCurl,  XML,  ggforce,  graphlayouts,  compiler,  dplyr,  RColorBrewer,  Cairo,  plyr,  qs,  rjson,  TwoSampleMR)
 ```
 
 ### Step 2. Install the package

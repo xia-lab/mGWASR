@@ -14,6 +14,86 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(mGWASR)
+# Overview 
+
+## Introduction
+
+**mGWASR** contains the R functions and libraries underlying the [mGWAS-Explorer](https://www.mgwas.ca/) web server. After installing and loading the package, users will be able to reproduce the same results from their local computers using the corresponding R command history downloaded from mGWAS-Explorer, thereby achieving maximum flexibility and reproducibility.
+
+Following installation and loading of *mGWASR*, users will be able to reproduce web server results from their local computers using the corresponding R command history downloaded from mGWAS-Explorer, thereby achieving maximum flexibility and reproducibility.
+
+## Installation
+
+**Step 1. Install package dependencies** 
+
+To use mGWASR , first install all package dependencies. Ensure that you are able to download packages from bioconductor. To install package dependencies, use the pacman R package (for those with >R 3.5.1). Note that some of these packages may require additional library dependencies that need to be installed prior to their own successful installation.
+
+```{r, eval=FALSE}
+install.packages("pacman")
+
+library(pacman)
+
+pacman::p_load(RSQLite, igraph,  BiocParallel,  pryr,  httr,  reshape,  ggplot2,  RJSONIO,  RCurl,  XML,  ggforce,  graphlayouts,  compiler,  dplyr,  RColorBrewer,  Cairo,  plyr,  qs,  rjson,  TwoSampleMR)
+
 ```
+
+**Step 2. Install the package**
+
+mGWASR is freely available from GitHub. The package documentation, including the vignettes for each module and user manual is available within the downloaded R package file. If all package dependencies were installed, you will be able to install the mGWASR. Due to issues with Latex, some users may find that they are only able to install mGWASR without any documentation (i.e. vignettes).
+
+Install the package directly from github using the *devtools* package. Open R and enter:
+
+
+```{r, eval=FALSE}
+
+# Step 1: Install devtools
+install.packages("devtools")
+library(devtools)
+
+# Step 2: Install mGWASR WITHOUT documentation
+devtools::install_github("xia-lab/mGWASR", build = TRUE, build_opts = c("--no-resave-data", "--no-manual", "--no-build-vignettes"), force = TRUE)
+
+# Step 2: Install mGWASR WITH documentation
+devtools::install_github("xia-lab/mGWASR", build = TRUE, build_opts = c("--no-resave-data", "--no-manual"), build_vignettes = TRUE, force = TRUE)
+
+```
+
+# Tips for using the mGWASR package
+
+1) The first function that you will use in every module is the `InitDataObjects` function, which constructs the *dataSet* object that stores user's data for further processing and analysis. 
+
+2) The mGWASR package directly creates data files/tables/analysis/networks outputs in your current working directory. 
+
+3) Every command must be run in sequence, please do not skip any commands as this will result in errors downstream. 
+
+4) Each main function in mGWASR is documented. Use the *?Function* format to open its documentation. For instance, use `?mGWASR::QueryExposure` to find out more about this function.
+
+# Obtain statistical associations and biological mappings
+
+## Starting from a list of metabolites
+
+```{r, eval=FALSE}
+library(mGWASR)
+
+#### Initiate the dataSet object for storing processed data
+mSet<-InitDataObjects("met2snp")
+
+#### Set cmpdListFile as a file containing your compound list 
+cmpdListFile<-"replace_with_your_file_name.txt"
+
+####  Read in the cmpdListFile, this will import a plain text file as single character string
+cmpdList<-readChar(cmpdListFile, file.info(cmpdListFile)$size)
+
+```
+
+Note, for users to prepare a list of metabolites, they can copy and paste a list into a plain text file, which can then be uploaded to R. These steps include:
+1) Set working directory to location of your files for analysis;
+2) Set your list of features as "cmpdListFile" in R
+3) Read in the text file for analysis using readChar, saving it as "cmpdListFile"
+
+
+## Starting from a list of item
+
+# Perform Mendelian ransomization analysis
+
+
