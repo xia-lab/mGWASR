@@ -88,7 +88,8 @@ cmpdList<-readChar(cmpdListFile, file.info(cmpdListFile)$size)
 
 Note, for users to prepare a list of metabolites, they can copy and paste a list into a plain text file, which can then be uploaded to R. These steps include:
 1) Set working directory to location of your files for analysis;
-2) Set your list of features as "cmpdListFile" in R
+2) Set your list of features as "cmpdListFile" in Rpkgdown::build_site()
+
 3) Read in the text file for analysis using readChar, saving it as "cmpdListFile"
 
 
