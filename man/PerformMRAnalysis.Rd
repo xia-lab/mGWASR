@@ -43,5 +43,5 @@ if(interactive()){
 }
 }
 \seealso{
-\code{\link[TwoSampleMR]{clump_data}}, \code{\link[TwoSampleMR]{extract_outcome_data}}, \code{\link[TwoSampleMR]{harmonise_data}}, \code{\link[TwoSampleMR]{mr}}, \code{\link[TwoSampleMR]{mr_heterogeneity}}, \code{\link[TwoSampleMR]{mr_pleiotropy_test}}, \code{\link[TwoSampleMR]{mr_singlesnp}}, \code{\link[TwoSampleMR]{mr_leaveoneout}}
+\code{\link[TwoSampleMR]{extract_outcome_data}}, \code{\link[TwoSampleMR]{harmonise_data}}, \code{\link[TwoSampleMR]{mr}}, \code{\link[TwoSampleMR]{mr_heterogeneity}}, \code{\link[TwoSampleMR]{mr_pleiotropy_test}}, \code{\link[TwoSampleMR]{mr_singlesnp}}, \code{\link[TwoSampleMR]{mr_leaveoneout}}
 }
