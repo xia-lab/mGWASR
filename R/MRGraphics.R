@@ -1,3 +1,23 @@
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param imgName PARAM_DESCRIPTION
+#' @param format PARAM_DESCRIPTION, Default: 'png'
+#' @param dpi PARAM_DESCRIPTION, Default: 72
+#' @param width PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[Cairo]{Cairo}}
+#' @rdname PlotScatter
+#' @export 
+#' @importFrom Cairo Cairo
 PlotScatter<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   imgName <<-imgName;
   #save.image("PlotScatter.RData")
@@ -81,6 +101,26 @@ PlotScatter<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #mrres
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param imgName PARAM_DESCRIPTION
+#' @param format PARAM_DESCRIPTION, Default: 'png'
+#' @param dpi PARAM_DESCRIPTION, Default: 72
+#' @param width PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[Cairo]{Cairo}}
+#' @rdname PlotForest
+#' @export 
+#' @importFrom Cairo Cairo
 PlotForest<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #imgName <<-imgName;
   #save.image("PlotForest.RData")
@@ -176,6 +216,26 @@ PlotForest<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #res
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param imgName PARAM_DESCRIPTION
+#' @param format PARAM_DESCRIPTION, Default: 'png'
+#' @param dpi PARAM_DESCRIPTION, Default: 72
+#' @param width PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[Cairo]{Cairo}}
+#' @rdname PlotLeaveOneOut
+#' @export 
+#' @importFrom Cairo Cairo
 PlotLeaveOneOut<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #imgName <<-imgName;
   #save.image("PlotLeaveOneOut.RData")
@@ -257,6 +317,26 @@ PlotLeaveOneOut<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #res
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param imgName PARAM_DESCRIPTION
+#' @param format PARAM_DESCRIPTION, Default: 'png'
+#' @param dpi PARAM_DESCRIPTION, Default: 72
+#' @param width PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[Cairo]{Cairo}}
+#' @rdname PlotFunnel
+#' @export 
+#' @importFrom Cairo Cairo
 PlotFunnel<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #imgName <<-imgName;
   #save.image("PlotFunnel.RData")

@@ -26,21 +26,20 @@
   }
 }
 
-#'Constructs a dataSet object for storing data 
-#'@description This functions handles the construction of a mSetObj object for storing data for further processing and analysis.
-#'It is necessary to utilize this function to specify to MetaboAnalystR the type of data and the type of analysis you will perform. 
-#'@usage InitDataObjects(data.type, anal.type)
-#'@param data.type The type of data, either list (Compound lists), conc (Compound concentration data), 
-#'specbin (Binned spectra data), pktable (Peak intensity table), nmrpeak (NMR peak lists), mspeak (MS peak lists), 
-#'or msspec (MS spectra data)
-#'@param anal.type Indicate the analysis module to be performed: stat, pathora, pathqea, msetora, msetssp, msetqea, ts, 
-#'cmpdmap, smpmap, or pathinteg
-#'@author Jeff Xia \email{jeff.xia@mcgill.ca}
-#'McGill University, Canada
-#'License: GNU GPL (>= 2)
-#'@export
-#'@import methods
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param anal.type PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname InitDataObjects
+#' @export 
 InitDataObjects <- function(anal.type){
   
   if(!.on.public.web){
@@ -70,10 +69,40 @@ InitDataObjects <- function(anal.type){
   return(.set.mSet(mSetObj));
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param analType PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetAnalType
+#' @export 
 SetAnalType <- function(analType){
   anal.type <<- analType;
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param mirs PARAM_DESCRIPTION
+#' @param idType PARAM_DESCRIPTION
+#' @param tissue PARAM_DESCRIPTION
+#' @param population PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetupListData
+#' @export 
 SetupListData <- function(mSetObj=NA, mirs, idType, tissue, population){
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$listData <- TRUE;
@@ -97,6 +126,24 @@ SetupListData <- function(mSetObj=NA, mirs, idType, tissue, population){
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param mirs PARAM_DESCRIPTION
+#' @param inputType PARAM_DESCRIPTION
+#' @param idType PARAM_DESCRIPTION
+#' @param tissue PARAM_DESCRIPTION
+#' @param population PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetupIndListData
+#' @export 
 SetupIndListData <- function(mSetObj=NA, mirs, inputType, idType, tissue, population){
   # mirs<<-mirs;
   # inputType<<-inputType;
@@ -132,6 +179,20 @@ SetupIndListData <- function(mSetObj=NA, mirs, inputType, idType, tissue, popula
 }
 
 # "ID", "Accession","Gene", "PMID"
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param netType PARAM_DESCRIPTION
+#' @param colInx PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetResCol
+#' @export 
 GetResCol <- function(netType, colInx){
    #netType<<-netType;
    #colInx<<-colInx;
@@ -152,6 +213,19 @@ GetResCol <- function(netType, colInx){
     return(res);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mir.id PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname RemoveEntry
+#' @export 
 RemoveEntry <- function(mir.id) {
   inx <- which(rownames(dataSet$mir.res) == mir.id);
   if(length(inx) > 0){
@@ -159,6 +233,19 @@ RemoveEntry <- function(mir.id) {
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param node.id PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname RemoveNode
+#' @export 
 RemoveNode <- function(node.id) {
   # node ID is name of either gene or miRNA
   row.ids <- NULL;
@@ -181,6 +268,23 @@ RemoveNode <- function(node.id) {
 }
 
 # batch remove based on
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param col.id PARAM_DESCRIPTION
+#' @param method PARAM_DESCRIPTION
+#' @param value PARAM_DESCRIPTION
+#' @param action PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname UpdateEntries
+#' @export 
 UpdateEntries <- function(mSetObj=NA, col.id, method, value, action) {
   mSetObj <- .get.mSet(mSetObj);
   
@@ -234,6 +338,19 @@ UpdateEntries <- function(mSetObj=NA, col.id, method, value, action) {
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param netType PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetResRowNames
+#' @export 
 GetResRowNames <- function(netType){
   mSetObj <- .get.mSet(mSetObj);
   analSet <- mSetObj$analSet$type;
@@ -255,6 +372,20 @@ GetResRowNames <- function(netType){
   rownames(resTable);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param txtInput PARAM_DESCRIPTION
+#' @param sep.type PARAM_DESCRIPTION, Default: 'space'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname getDataFromTextArea
+#' @export 
 getDataFromTextArea <- function(txtInput, sep.type="space"){
   
   lines <- unlist(strsplit(txtInput, "\r|\n|\r\n")[1]);
@@ -283,11 +414,44 @@ getDataFromTextArea <- function(txtInput, sep.type="space"){
 }
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param msg PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname AddErrMsg
+#' @export 
 AddErrMsg <- function(msg){
   err.vec <<- c(err.vec, msg);
   print(msg);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param q.type PARAM_DESCRIPTION
+#' @param hmdb PARAM_DESCRIPTION, Default: T
+#' @param pubchem PARAM_DESCRIPTION, Default: T
+#' @param chebi PARAM_DESCRIPTION, Default: F
+#' @param kegg PARAM_DESCRIPTION, Default: T
+#' @param metlin PARAM_DESCRIPTION, Default: F
+#' @param lipid PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname CrossReferencing
+#' @export 
 CrossReferencing <- function(mSetObj=NA, q.type, hmdb=T, pubchem=T, 
                              chebi=F, kegg=T, metlin=F, lipid=F){
   # q.type<<-q.type;
@@ -347,6 +511,21 @@ CrossReferencing <- function(mSetObj=NA, q.type, hmdb=T, pubchem=T,
   return(.set.mSet(mSetObj));
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param q.type PARAM_DESCRIPTION
+#' @param lipid PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname MetaboliteMappingExact
+#' @export 
 MetaboliteMappingExact <- function(mSetObj=NA, q.type, lipid = F){
   
   #q.type<<-q.type;
@@ -540,6 +719,19 @@ MetaboliteMappingExact <- function(mSetObj=NA, q.type, lipid = F){
 }
 
 # Load RSQLite, necessary for network analysis
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname load_rsqlite
+#' @export 
 load_rsqlite <- function(){
   suppressMessages(library(RSQLite))
 }
@@ -549,6 +741,24 @@ load_rsqlite <- function(){
   return(dbConnect(SQLite(), sqlite.path)); 
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param dat PARAM_DESCRIPTION
+#' @param file PARAM_DESCRIPTION
+#' @param row.names PARAM_DESCRIPTION, Default: TRUE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[data.table]{fwrite}}
+#' @rdname fast.write.csv
+#' @export 
+#' @importFrom data.table fwrite
 fast.write.csv <- function(dat, file, row.names=TRUE){
   tryCatch(
     {
@@ -580,6 +790,19 @@ fast.write.csv <- function(dat, file, row.names=TRUE){
 }
 
 # general message only print when running local
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param msg PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname AddMsg
+#' @export 
 AddMsg <- function(msg){
   msg.vec <<- c(msg.vec, msg);
   if(!.on.public.web){
@@ -617,6 +840,21 @@ AddMsg <- function(msg){
   return(dat);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param nd.vec PARAM_DESCRIPTION
+#' @param background PARAM_DESCRIPTION, Default: 'black'
+#' @param centered PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname ComputeColorGradient
+#' @export 
 ComputeColorGradient <- function(nd.vec, background="black", centered){
   #if(sum(nd.vec<0, na.rm=TRUE) > 0){
   #centered <- T;
@@ -628,6 +866,20 @@ ComputeColorGradient <- function(nd.vec, background="black", centered){
   return(scale_vec_colours(nd.vec, col = color, breaks = breaks));
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param background PARAM_DESCRIPTION
+#' @param center PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetColorGradient
+#' @export 
 GetColorGradient <- function(background, center){
   if(background == "black"){
     if(center){
@@ -646,6 +898,21 @@ GetColorGradient <- function(background, center){
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param x PARAM_DESCRIPTION
+#' @param n PARAM_DESCRIPTION
+#' @param center PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname generate_breaks
+#' @export 
 generate_breaks = function(x, n, center = F){
   if(center){
     m = max(abs(c(min(x, na.rm = T), max(x, na.rm = T))))
@@ -657,16 +924,59 @@ generate_breaks = function(x, n, center = F){
   return(res)
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param x PARAM_DESCRIPTION
+#' @param col PARAM_DESCRIPTION, Default: rainbow(10)
+#' @param breaks PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname scale_vec_colours
+#' @export 
 scale_vec_colours = function(x, col = rainbow(10), breaks = NA){
   breaks <- sort(unique(breaks));
   return(col[as.numeric(cut(x, breaks = breaks, include.lowest = T))])
 }
 
 # Load igraph, necessary for network analysis
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname load_igraph
+#' @export 
 load_igraph <- function(){
   suppressMessages(library(igraph))
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param q.vec PARAM_DESCRIPTION
+#' @param org PARAM_DESCRIPTION
+#' @param type PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname doGeneIDMapping
+#' @export 
 doGeneIDMapping <- function(q.vec, org, type){
   #save.image("doGeneIDMapping.RData")
   
@@ -705,6 +1015,19 @@ doGeneIDMapping <- function(q.vec, org, type){
   return(entrezs);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param data PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname addEntrezID
+#' @export 
 addEntrezID <- function(data){
   #save.image("addEntrezID.RData")
   
@@ -724,6 +1047,20 @@ addEntrezID <- function(data){
 
 # only keep alphabets, numbers, ",", "." "_", "-" "/"
 # note, this may leads to duplicate names
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param query PARAM_DESCRIPTION
+#' @param type PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname CleanNames
+#' @export 
 CleanNames <- function(query, type){
   
   if(type=="sample_name"){
@@ -734,6 +1071,19 @@ CleanNames <- function(query, type){
   return(make.unique(query));
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param query PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname ClearStrings
+#' @export 
 ClearStrings<-function(query){
   # kill multiple white space
   query <- gsub(" +"," ",query);
@@ -799,10 +1149,40 @@ ClearStrings<-function(query){
   api.base <<- "http://api.xialab.ca"
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetErrMsg
+#' @export 
 GetErrMsg<-function(){
   return(err.vec);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param cmpdIDs PARAM_DESCRIPTION
+#' @param idType PARAM_DESCRIPTION
+#' @param tissueType PARAM_DESCRIPTION
+#' @param population PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname PerformCmpdMapping
+#' @export 
 PerformCmpdMapping <- function(mSetObj=NA, cmpdIDs, idType, tissueType, population){
   
   mSetObj <- .get.mSet(mSetObj);
@@ -838,6 +1218,19 @@ PerformCmpdMapping <- function(mSetObj=NA, cmpdIDs, idType, tissueType, populati
   # return(.set.mSet(mSetObjCR));
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetMappingType
+#' @export 
 SetMappingType <- function(){
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$mapType <- nms.vec;
@@ -849,6 +1242,19 @@ SetMappingType <- function(){
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetDbOpt
+#' @export 
 SetDbOpt <- function(){
   #save.image("SetDbOpt.RData")
   mSetObj <- .get.mSet(mSetObj);
@@ -861,6 +1267,19 @@ SetDbOpt <- function(){
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname CreateMappingResultTable
+#' @export 
 CreateMappingResultTable <- function(mSetObj=NA) {
   #save.image("CreateMappingResultTable.RData")
   
@@ -953,6 +1372,19 @@ CreateMappingResultTable <- function(mSetObj=NA) {
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetMRMethod
+#' @export 
 SetMRMethod <- function(){
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$methodType <- nms.vec;
@@ -964,6 +1396,23 @@ SetMRMethod <- function(){
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param col.id PARAM_DESCRIPTION
+#' @param method PARAM_DESCRIPTION
+#' @param value PARAM_DESCRIPTION
+#' @param action PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname UpdateMREntries
+#' @export 
 UpdateMREntries <- function(mSetObj=NA, col.id, method, value, action) {
   #col.id<<-col.id;
   #method<<-method;

@@ -4,30 +4,95 @@
 ## Author: Jeff Xia, jeff.xia@mcgill.ca
 ###################################################
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetVepOpt
+#' @export 
 SetVepOpt <- function(opt){
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$vep.opt <- opt;
   .set.mSet(mSetObj);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetVepDis
+#' @export 
 SetVepDis <- function(opt){
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$vep.dis <- opt;
   .set.mSet(mSetObj);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetVepNum
+#' @export 
 SetVepNum <- function(opt){
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$vep.num <- as.numeric(opt);
   .set.mSet(mSetObj);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetLDProxy
+#' @export 
 SetLDProxy <- function(opt){
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$ld.proxy <- opt;
   .set.mSet(mSetObj);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param opt PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetLDR2
+#' @export 
 SetLDR2 <- function(opt){
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$ld.r2 <- as.numeric(opt);
@@ -83,6 +148,19 @@ SetLDR2 <- function(opt){
 
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QueryMultiList
+#' @export 
 QueryMultiList <- function(){
   #save.image("QueryMultiList.RData")
   mSetObj <- .get.mSet(mSetObj);
@@ -1252,6 +1330,19 @@ QueryMultiList <- function(){
 }
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param input.type PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SearchMultiNet
+#' @export 
 SearchMultiNet <- function(input.type){
    #input.type<<-input.type;
    #print(input.type)
@@ -1293,6 +1384,19 @@ SearchMultiNet <- function(input.type){
   return(res);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param pmid PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QueryStudy
+#' @export 
 QueryStudy <- function(pmid){
   .init.multilist();
   pmid<<-pmid; # need pmid for loading json for manhattan plot
@@ -1329,6 +1433,22 @@ QueryStudy <- function(pmid){
 }
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[qs]{qread}}
+#' @rdname QuerySigPheMR
+#' @export 
+#' @importFrom qs qread
 QuerySigPheMR <- function(){
   #save.image("QuerySigPheMR.RData");
   
@@ -1363,6 +1483,20 @@ QuerySigPheMR <- function(){
 }
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param idType PARAM_DESCRIPTION
+#' @param itemVec PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QuerySingleItem
+#' @export 
 QuerySingleItem <- function(idType, itemVec){
   .init.multilist();
   #idType<<-idType;
@@ -1406,6 +1540,19 @@ QuerySingleItem <- function(idType, itemVec){
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param itemVec PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QueryExposure
+#' @export 
 QueryExposure <- function(itemVec){
   .init.multilist();
   #itemVec<<-itemVec;
@@ -1449,6 +1596,19 @@ QueryExposure <- function(itemVec){
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param itemVec PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QueryOutcome
+#' @export 
 QueryOutcome <- function(itemVec){
   mSetObj <- .get.mSet(mSetObj);
   itemVec.id <- trimws(itemVec);
@@ -1472,6 +1632,20 @@ QueryOutcome <- function(itemVec){
   }  
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param itemVec PARAM_DESCRIPTION
+#' @param resOpt PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QueryPheMR
+#' @export 
 QueryPheMR <- function(itemVec, resOpt){
   .init.multilist();
   # itemVec<<-itemVec;
@@ -1517,6 +1691,21 @@ QueryPheMR <- function(itemVec, resOpt){
 }
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param db PARAM_DESCRIPTION
+#' @param req PARAM_DESCRIPTION
+#' @param conf PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetPpiDb
+#' @export 
 SetPpiDb  <- function(db, req, conf){
   #db<<-db;
   #req<<-req;

@@ -4,6 +4,21 @@
 ## Author: Jeff Xia, jeff.xia@mcgill.ca
 ###################################################
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param file.nm PARAM_DESCRIPTION
+#' @param fun.type PARAM_DESCRIPTION
+#' @param IDs PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname PerformNetEnrichment
+#' @export 
 PerformNetEnrichment <- function(file.nm, fun.type, IDs){
     # prepare query
     ora.vec <- NULL;
@@ -16,6 +31,26 @@ PerformNetEnrichment <- function(file.nm, fun.type, IDs){
 
 # note: hit.query, resTable must synchronize
 # ora.vec should contains entrez ids, named by their gene symbols
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param file.nm PARAM_DESCRIPTION
+#' @param fun.type PARAM_DESCRIPTION
+#' @param ora.vec PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[qs]{qread}}
+#'  \code{\link[rjson]{toJSON}}
+#' @rdname PerformEnrichAnalysis
+#' @export 
+#' @importFrom qs qread
+#' @importFrom rjson toJSON
 PerformEnrichAnalysis <- function(file.nm, fun.type, ora.vec){
   org.code <- "hsa";
   if(fun.type %in% c("keggc", "smpdb")){
@@ -215,6 +250,19 @@ PerformEnrichAnalysis <- function(file.nm, fun.type, ora.vec){
   qs::qsave(current.mset, "current.geneset.qs");
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param symbol.vec PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname doSymbol2EntrezMapping
+#' @export 
 doSymbol2EntrezMapping <- function(symbol.vec){
   db.path <- paste("../../data/hsa/entrez.rds", sep="");
   if(!.on.public.web){
@@ -233,6 +281,27 @@ doSymbol2EntrezMapping <- function(symbol.vec){
   return(entrezs);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param ldclumpOpt PARAM_DESCRIPTION
+#' @param ldProxies PARAM_DESCRIPTION
+#' @param ldThresh PARAM_DESCRIPTION
+#' @param pldSNPs PARAM_DESCRIPTION
+#' @param mafThresh PARAM_DESCRIPTION
+#' @param harmonizeOpt PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[TwoSampleMR]{extract_outcome_data}}, \code{\link[TwoSampleMR]{harmonise_data}}, \code{\link[TwoSampleMR]{mr}}, \code{\link[TwoSampleMR]{mr_heterogeneity}}, \code{\link[TwoSampleMR]{mr_pleiotropy_test}}, \code{\link[TwoSampleMR]{mr_singlesnp}}, \code{\link[TwoSampleMR]{mr_leaveoneout}}
+#' @rdname PerformMRAnalysis
+#' @export 
+#' @importFrom TwoSampleMR extract_outcome_data harmonise_data mr mr_heterogeneity mr_pleiotropy_test mr_singlesnp mr_leaveoneout
 PerformMRAnalysis <- function(ldclumpOpt, ldProxies, ldThresh, pldSNPs, mafThresh, harmonizeOpt){
   # ldclumpOpt<<-ldclumpOpt;
   # ldProxies<<-ldProxies;
@@ -306,6 +375,19 @@ PerformMRAnalysis <- function(ldclumpOpt, ldProxies, ldThresh, pldSNPs, mafThres
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetMRRes.rowNames
+#' @export 
 GetMRRes.rowNames<-function(mSetObj=NA){
   #save.image("GetMRRes.rowNames.RData")
   mSetObj <- .get.mSet(mSetObj);
@@ -316,11 +398,37 @@ GetMRRes.rowNames<-function(mSetObj=NA){
   return (nms);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetMRRes.mat
+#' @export 
 GetMRRes.mat<-function(mSetObj=NA){
   mSetObj <- .get.mSet(mSetObj);
   return(mSetObj$dataSet$mr_results_merge);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetHeteroRes.rowNames
+#' @export 
 GetHeteroRes.rowNames<-function(mSetObj=NA){
   #save.image("GetHeteroRes.rowNames.RData")
   mSetObj <- .get.mSet(mSetObj);
@@ -331,16 +439,56 @@ GetHeteroRes.rowNames<-function(mSetObj=NA){
   return (nms);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetHeteroRes.mat
+#' @export 
 GetHeteroRes.mat<-function(mSetObj=NA){
   mSetObj <- .get.mSet(mSetObj);
   return(mSetObj$dataSet$mr.hetero_mat);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetPleioRes.mat
+#' @export 
 GetPleioRes.mat<-function(mSetObj=NA){
   mSetObj <- .get.mSet(mSetObj);
   return(mSetObj$dataSet$mr.pleio_mat);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param type PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetMRMat
+#' @export 
 GetMRMat<-function(mSetObj=NA, type){
   # type<<-type;
   # save.image("GetMRMat.RData")
@@ -355,6 +503,20 @@ GetMRMat<-function(mSetObj=NA, type){
   return(CleanNumber(signif(as.matrix(sig.mat),5)));
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param type PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetMRMatRowNames
+#' @export 
 GetMRMatRowNames<-function(mSetObj=NA, type){
   mSetObj <- .get.mSet(mSetObj);
   if(type == "single"){
@@ -366,6 +528,20 @@ GetMRMatRowNames<-function(mSetObj=NA, type){
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mSetObj PARAM_DESCRIPTION, Default: NA
+#' @param type PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetMRMatColNames
+#' @export 
 GetMRMatColNames<-function(mSetObj=NA, type){
   mSetObj <- .get.mSet(mSetObj);
   if(type == "single"){
@@ -461,6 +637,20 @@ GetMRMatColNames<-function(mSetObj=NA, type){
 #   }
 # }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param exposure PARAM_DESCRIPTION
+#' @param outcome PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QueryLiteratureMelodiPresto
+#' @export 
 QueryLiteratureMelodiPresto <- function(exposure, outcome) {
   .init.multilist();
   #exposure<<-exposure;

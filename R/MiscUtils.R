@@ -5,6 +5,19 @@
 ###################################################
 
 # need to obtain the full path to convert (from imagemagik) for cropping images
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetBashFullPath
+#' @export 
 GetBashFullPath<-function(){
     path <- system("which bash", intern=TRUE);
     if((length(path) == 0) && (typeof(path) == "character")){
@@ -14,9 +27,37 @@ GetBashFullPath<-function(){
     return(path);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param n PARAM_DESCRIPTION, Default: 10
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname cleanMem
+#' @export 
 cleanMem <- function(n=10) { for (i in 1:n) gc() }
 
 # new range [a, b]
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param qvec PARAM_DESCRIPTION
+#' @param a PARAM_DESCRIPTION
+#' @param b PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname rescale2NewRange
+#' @export 
 rescale2NewRange <- function(qvec, a, b){
     q.min <- min(qvec);
     q.max <- max(qvec);
@@ -64,6 +105,20 @@ rescale2NewRange <- function(qvec, a, b){
 }
 
 # shorthand
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param ... PARAM_DESCRIPTION
+#' @param n PARAM_DESCRIPTION, Default: 40
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname ShowMemoryUse
+#' @export 
 ShowMemoryUse <- function(..., n=40) {
     library(pryr);
     sink(); # make sure print to screen
@@ -73,6 +128,20 @@ ShowMemoryUse <- function(..., n=40) {
     print(warnings());
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param c1 PARAM_DESCRIPTION, Default: 'grey'
+#' @param c2 PARAM_DESCRIPTION, Default: 'red'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname color_scale
+#' @export 
 color_scale <- function(c1="grey", c2="red") {
   pal <- colorRampPalette(c(c1, c2))
   colors <- pal(100)
@@ -80,6 +149,21 @@ color_scale <- function(c1="grey", c2="red") {
 }
 
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param nd.vec PARAM_DESCRIPTION
+#' @param background PARAM_DESCRIPTION, Default: 'black'
+#' @param centered PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname ComputeColorGradient
+#' @export 
 ComputeColorGradient <- function(nd.vec, background="black", centered){
     require("RColorBrewer");
 
@@ -95,6 +179,21 @@ ComputeColorGradient <- function(nd.vec, background="black", centered){
     return(scale_vec_colours(nd.vec, col = color, breaks = breaks));
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param x PARAM_DESCRIPTION
+#' @param n PARAM_DESCRIPTION
+#' @param center PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname generate_breaks
+#' @export 
 generate_breaks = function(x, n, center = F){
     if(center){
         m = max(abs(c(min(x, na.rm = T), max(x, na.rm = T))))
@@ -106,11 +205,40 @@ generate_breaks = function(x, n, center = F){
     return(res)
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param x PARAM_DESCRIPTION
+#' @param col PARAM_DESCRIPTION, Default: rainbow(10)
+#' @param breaks PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname scale_vec_colours
+#' @export 
 scale_vec_colours = function(x, col = rainbow(10), breaks = NA){
     breaks <- sort(unique(breaks));
     return(col[as.numeric(cut(x, breaks = breaks, include.lowest = T))])
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param background PARAM_DESCRIPTION
+#' @param center PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetColorGradient
+#' @export 
 GetColorGradient <- function(background, center){
     if(background == "black"){
         if(center){
@@ -129,6 +257,21 @@ GetColorGradient <- function(background, center){
     }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param x PARAM_DESCRIPTION
+#' @param from PARAM_DESCRIPTION
+#' @param to PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname rescale
+#' @export 
 rescale <- function(x, from, to){
   (x - min(x)) / max(x - min(x)) * (to - from) + from
 }
@@ -152,6 +295,22 @@ rescale <- function(x, from, to){
   return(my.mat);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param db.path PARAM_DESCRIPTION
+#' @param q.vec PARAM_DESCRIPTION
+#' @param table.nm PARAM_DESCRIPTION
+#' @param col.nm PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QueryMet2Dis
+#' @export 
 QueryMet2Dis <- function(db.path, q.vec, table.nm, col.nm){
   require('RSQLite');
   db.path <- paste0(db.path, ".sqlite");
@@ -174,6 +333,25 @@ QueryMet2Dis <- function(db.path, q.vec, table.nm, col.nm){
 
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param db.path PARAM_DESCRIPTION
+#' @param q.vec PARAM_DESCRIPTION
+#' @param table.nm PARAM_DESCRIPTION
+#' @param col.nm PARAM_DESCRIPTION
+#' @param biofluid PARAM_DESCRIPTION, Default: 'all'
+#' @param population PARAM_DESCRIPTION, Default: 'all'
+#' @param db.opt PARAM_DESCRIPTION, Default: 'kegg'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname Query.mGWASDB
+#' @export 
 Query.mGWASDB <- function(db.path, q.vec, table.nm, col.nm, biofluid="all", population="all", db.opt="kegg"){
   require('RSQLite');
    #db.path<<-db.path;
@@ -312,6 +490,22 @@ Query.mGWASDB <- function(db.path, q.vec, table.nm, col.nm, biofluid="all", popu
   return(mir.dic);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param db.path PARAM_DESCRIPTION
+#' @param q.vec PARAM_DESCRIPTION
+#' @param table.nm PARAM_DESCRIPTION
+#' @param col.nm PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname Query.DisGeNETDB
+#' @export 
 Query.DisGeNETDB <- function(db.path, q.vec, table.nm, col.nm){
   require('RSQLite');
   #save.image("Query.DisGeNETDB.RData")
@@ -371,15 +565,55 @@ Query.DisGeNETDB <- function(db.path, q.vec, table.nm, col.nm){
 }
 
 # Load httr
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname load_httr
+#' @export 
 load_httr <- function(){
   suppressMessages(library(httr))
 }
 
 # Load reshape, necessary for graphics
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname load_reshape
+#' @export 
 load_reshape <- function(){
   suppressMessages(library(reshape))
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param x PARAM_DESCRIPTION
+#' @param y PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname overlap_ratio
+#' @export 
 overlap_ratio <- function(x, y) {
   x <- unlist(x)
   y <- unlist(y)
@@ -387,16 +621,56 @@ overlap_ratio <- function(x, y) {
 }
 
 # Load ggplot2
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname load_ggplot
+#' @export 
 load_ggplot <- function(){
   suppressMessages(library(ggplot2))
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param cols PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname hex2rgb
+#' @export 
 hex2rgb <- function(cols){
   return(apply(sapply(cols, col2rgb), 2, function(x){paste("rgb(", x[1], ",", x[2], ",", x[3], ")", sep="")}));
 }
 
 `%notin%` <- Negate(`%in%`)
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param grp.num PARAM_DESCRIPTION
+#' @param filenm PARAM_DESCRIPTION, Default: NULL
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname gg_color_hue
+#' @export 
 gg_color_hue <- function(grp.num, filenm=NULL) {
   grp.num <- as.numeric(grp.num)
   pal18 <- c("#3cb44b", "#f032e6", "#ffe119", "#e6194B", "#f58231", "#bfef45", "#fabebe", "#469990", "#e6beff", "#9A6324", "#800000", "#aaffc3", "#808000", "#ffd8b1", "#42d4f4","#000075", "#ff4500");
@@ -415,6 +689,22 @@ gg_color_hue <- function(grp.num, filenm=NULL) {
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param pmid PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[qs]{qread}}
+#' @rdname Prepare3DManhattanJSON
+#' @export 
+#' @importFrom qs qread
 Prepare3DManhattanJSON <- function(pmid){
   qs.dir <- "../../data/manhattan/";
   qs.filenm <- paste0(qs.dir, pmid, ".qs");
@@ -432,6 +722,22 @@ Prepare3DManhattanJSON <- function(pmid){
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[qs]{qread}}
+#' @rdname PrepareMiamiJSON
+#' @export 
+#' @importFrom qs qread
 PrepareMiamiJSON <- function(){
   #save.image("PrepareMiamiJSON.RData")
   qs.dir <- "../../data/phemr_miami";
@@ -644,6 +950,21 @@ PrepareMiamiJSON <- function(){
   
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param q.vec PARAM_DESCRIPTION
+#' @param vepDis PARAM_DESCRIPTION
+#' @param content_type PARAM_DESCRIPTION, Default: 'application/json'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QueryVEP
+#' @export 
 QueryVEP <- function(q.vec,vepDis,content_type="application/json" ){
   library(httr)
   #library(jsonlite)
@@ -684,6 +1005,26 @@ QueryVEP <- function(q.vec,vepDis,content_type="application/json" ){
   return(resvep3)
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param snpquery PARAM_DESCRIPTION, Default: NULL
+#' @param genequery PARAM_DESCRIPTION, Default: NULL
+#' @param regionquery PARAM_DESCRIPTION, Default: NULL
+#' @param catalogue PARAM_DESCRIPTION, Default: 'GWAS'
+#' @param pvalue PARAM_DESCRIPTION, Default: 1e-05
+#' @param proxies PARAM_DESCRIPTION, Default: 'None'
+#' @param r2 PARAM_DESCRIPTION, Default: 0.8
+#' @param build PARAM_DESCRIPTION, Default: 37
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname phenoscanner
+#' @export 
 phenoscanner <- function(snpquery=NULL, genequery=NULL, regionquery=NULL, catalogue="GWAS", pvalue=1E-5, proxies="None", r2=0.8, build=37){
   cat("PhenoScanner V2\n")
   if(is.null(snpquery) & is.null(regionquery) & is.null(genequery)) stop("no query has been requested")
@@ -803,6 +1144,32 @@ phenoscanner <- function(snpquery=NULL, genequery=NULL, regionquery=NULL, catalo
   return(output)
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param query PARAM_DESCRIPTION, Default: NULL
+#' @param file PARAM_DESCRIPTION, Default: NULL
+#' @param study PARAM_DESCRIPTION, Default: NULL
+#' @param ldThresh PARAM_DESCRIPTION, Default: 0.8
+#' @param ldPop PARAM_DESCRIPTION, Default: 'EUR'
+#' @param epi PARAM_DESCRIPTION, Default: 'vanilla'
+#' @param cons PARAM_DESCRIPTION, Default: 'siphy'
+#' @param genetypes PARAM_DESCRIPTION, Default: 'gencode'
+#' @param url PARAM_DESCRIPTION, Default: Haploreg.settings[["base.url"]]
+#' @param timeout PARAM_DESCRIPTION, Default: 100
+#' @param encoding PARAM_DESCRIPTION, Default: 'UTF-8'
+#' @param querySNP PARAM_DESCRIPTION, Default: FALSE
+#' @param fields PARAM_DESCRIPTION, Default: NULL
+#' @param verbose PARAM_DESCRIPTION, Default: FALSE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QueryHaploreg
+#' @export 
 QueryHaploreg <- function(query=NULL, file=NULL,
                           study=NULL,
                           ldThresh=0.8, 
@@ -888,6 +1255,32 @@ QueryHaploreg <- function(query=NULL, file=NULL,
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param query PARAM_DESCRIPTION, Default: NULL
+#' @param file PARAM_DESCRIPTION, Default: NULL
+#' @param study PARAM_DESCRIPTION, Default: NULL
+#' @param ldThresh PARAM_DESCRIPTION, Default: 0.8
+#' @param ldPop PARAM_DESCRIPTION, Default: 'EUR'
+#' @param epi PARAM_DESCRIPTION, Default: 'vanilla'
+#' @param cons PARAM_DESCRIPTION, Default: 'siphy'
+#' @param genetypes PARAM_DESCRIPTION, Default: 'gencode'
+#' @param url PARAM_DESCRIPTION, Default: Haploreg.settings[["base.url"]]
+#' @param timeout PARAM_DESCRIPTION, Default: 100
+#' @param encoding PARAM_DESCRIPTION, Default: 'UTF-8'
+#' @param querySNP PARAM_DESCRIPTION, Default: FALSE
+#' @param fields PARAM_DESCRIPTION, Default: NULL
+#' @param verbose PARAM_DESCRIPTION, Default: FALSE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname simpleQuery
+#' @export 
 simpleQuery <- function(query=NULL, file=NULL,
                         study=NULL,
                         ldThresh=0.8, 
@@ -1129,6 +1522,21 @@ simpleQuery <- function(query=NULL, file=NULL,
   return(data.merged)
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param url PARAM_DESCRIPTION
+#' @param body PARAM_DESCRIPTION
+#' @param timeout PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname getHaploregData
+#' @export 
 getHaploregData <- function(url, body, timeout) {
   # Form encoded: multipart encoded
   library(httr)
@@ -1158,6 +1566,20 @@ getHaploregData <- function(url, body, timeout) {
   return(r)
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param x PARAM_DESCRIPTION
+#' @param na.strings PARAM_DESCRIPTION, Default: 'NA'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname as.num
+#' @export 
 as.num <- function(x, na.strings = "NA") {
   stopifnot(is.character(x))
   na = x %in% na.strings
@@ -1167,6 +1589,22 @@ as.num <- function(x, na.strings = "NA") {
   x
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param table.nm PARAM_DESCRIPTION
+#' @param q.vec PARAM_DESCRIPTION
+#' @param requireExp PARAM_DESCRIPTION
+#' @param min.score PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QueryPpiSQLiteZero
+#' @export 
 QueryPpiSQLiteZero <- function(table.nm, q.vec, requireExp, min.score){
   #table.nm<<-table.nm;
   #q.vec<<-q.vec;
@@ -1211,6 +1649,23 @@ QueryPpiSQLiteZero <- function(table.nm, q.vec, requireExp, min.score){
   return(ppi.res);
 }
   
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param url PARAM_DESCRIPTION, Default: 'NA'
+#' @param init PARAM_DESCRIPTION, Default: TRUE
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[rjson]{fromJSON}}
+#' @rdname getApiResult
+#' @export 
+#' @importFrom rjson fromJSON
 getApiResult <- function(url="NA", init=TRUE){
   json_data = tryCatch({
     rjson::fromJSON(file=url);
@@ -1240,6 +1695,19 @@ getApiResult <- function(url="NA", init=TRUE){
   return(json_data)
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetCompleteMetList
+#' @export 
 GetCompleteMetList <- function(){
   #save.image("GetCompleteMetList.RData");
   # get pre-saved metabolite name with beta and se
@@ -1247,6 +1715,19 @@ GetCompleteMetList <- function(){
   return(met.nms);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetCompletePheMRMetDisList
+#' @export 
 GetCompletePheMRMetDisList <- function(){
   #save.image("GetCompletePheMRMetDisList.RData");
   met.nms <- .get.my.lib("phemr_browse_met_nms.qs");
@@ -1254,6 +1735,19 @@ GetCompletePheMRMetDisList <- function(){
   return(c(met.nms, dis.nms));
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname GetCompleteDisList
+#' @export 
 GetCompleteDisList <- function(){
   # get disease from ieugwasr
   #save.image("GetCompleteDisList.RData")
@@ -1274,13 +1768,19 @@ GetCompleteDisList <- function(){
   return(res);
 }
 
-#'Replace infinite numbers
-#'@description Replace -Inf, Inf to 99999 and -99999
-#'@param bdata Input matrix to clean numbers
-#'@author Jeff Xia\email{jeff.xia@mcgill.ca}
-#'McGill University, Canada
-#'License: MIT License
-#'
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param bdata PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname CleanNumber
+#' @export 
 CleanNumber <-function(bdata){
   if(sum(bdata==Inf)>0){
     inx <- bdata == Inf;
@@ -1295,6 +1795,19 @@ CleanNumber <-function(bdata){
   bdata;
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname SetEqtlTissue
+#' @export 
 SetEqtlTissue <- function(){
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$eqtlTissue <- nms.vec;
@@ -1306,6 +1819,22 @@ SetEqtlTissue <- function(){
   }
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param db.path PARAM_DESCRIPTION
+#' @param q.vec PARAM_DESCRIPTION
+#' @param table.nm PARAM_DESCRIPTION
+#' @param col.nm PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname Query.eQTLDB
+#' @export 
 Query.eQTLDB <- function(db.path, q.vec, table.nm, col.nm){
   require('RSQLite');
   # db.path <<- db.path;
@@ -1340,6 +1869,20 @@ Query.eQTLDB <- function(db.path, q.vec, table.nm, col.nm){
   return(mir.dic);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param db.path PARAM_DESCRIPTION
+#' @param q.mat PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname Query.pQTLDB
+#' @export 
 Query.pQTLDB <- function(db.path, q.mat){
   require('RSQLite');
   #db.path<<-db.path;
@@ -1380,6 +1923,24 @@ Query.pQTLDB <- function(db.path, q.mat){
   return(snp.res.mat);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param route PARAM_DESCRIPTION
+#' @param params PARAM_DESCRIPTION, Default: NULL
+#' @param mode PARAM_DESCRIPTION, Default: c("raw", "table")
+#' @param method PARAM_DESCRIPTION, Default: c("GET", "POST")
+#' @param retry_times PARAM_DESCRIPTION, Default: 3
+#' @param retry_pause_min PARAM_DESCRIPTION, Default: 1
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname query_epigraphdb
+#' @export 
 query_epigraphdb <- function(route, params = NULL,
                              mode = c("raw", "table"),
                              method = c("GET", "POST"),
@@ -1407,6 +1968,27 @@ query_epigraphdb <- function(route, params = NULL,
   res
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param route PARAM_DESCRIPTION
+#' @param params PARAM_DESCRIPTION
+#' @param retry_times PARAM_DESCRIPTION
+#' @param retry_pause_min PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[glue]{glue}}
+#'  \code{\link[httr]{add_headers}}, \code{\link[httr]{RETRY}}
+#' @rdname api_get_request
+#' @export 
+#' @importFrom glue glue
+#' @importFrom httr add_headers RETRY
 api_get_request <- function(route, params,
                             retry_times, retry_pause_min) {
   #print("api_get_request====")
@@ -1433,6 +2015,29 @@ api_get_request <- function(route, params,
   response
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param route PARAM_DESCRIPTION
+#' @param params PARAM_DESCRIPTION
+#' @param retry_times PARAM_DESCRIPTION
+#' @param retry_pause_min PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[glue]{glue}}
+#'  \code{\link[httr]{add_headers}}, \code{\link[httr]{RETRY}}
+#'  \code{\link[jsonlite]{toJSON, fromJSON}}
+#' @rdname api_post_request
+#' @export 
+#' @importFrom glue glue
+#' @importFrom httr add_headers RETRY
+#' @importFrom jsonlite toJSON
 api_post_request <- function(route, params,
                              retry_times, retry_pause_min) {
   #route<<-route;
@@ -1462,6 +2067,27 @@ api_post_request <- function(route, params,
   response
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param route PARAM_DESCRIPTION
+#' @param params PARAM_DESCRIPTION
+#' @param mode PARAM_DESCRIPTION, Default: c("table", "raw")
+#' @param method PARAM_DESCRIPTION, Default: method
+#' @param retry_times PARAM_DESCRIPTION
+#' @param retry_pause_min PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[httr]{content}}
+#' @rdname api_request
+#' @export 
+#' @importFrom httr content
 api_request <- function(route, params,
                         mode = c("table", "raw"),
                         method = method,
@@ -1486,6 +2112,23 @@ api_request <- function(route, params,
   response %>% httr::content(as = "parsed", encoding = "utf-8") 
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param response PARAM_DESCRIPTION
+#' @param context PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[httr]{status_code}}, \code{\link[httr]{http_condition}}
+#' @rdname stop_for_status
+#' @export 
+#' @importFrom httr status_code http_condition
 stop_for_status <- function(response, context) {
   #print("stop_for_status====")
   
@@ -1496,6 +2139,29 @@ stop_for_status <- function(response, context) {
   stop(httr::http_condition(response, context))
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param response PARAM_DESCRIPTION
+#' @param field PARAM_DESCRIPTION, Default: 'results'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[httr]{content}}
+#'  \code{\link[jsonlite]{toJSON, fromJSON}}
+#'  \code{\link[purrr]{pluck}}
+#'  \code{\link[tibble]{as_tibble}}
+#' @rdname flatten_response
+#' @export 
+#' @importFrom httr content
+#' @importFrom jsonlite fromJSON
+#' @importFrom purrr pluck
+#' @importFrom tibble as_tibble
 flatten_response <- function(response, field = "results") {
   library(magrittr) # for pipe operation %>% 
   response %>%
@@ -1505,6 +2171,27 @@ flatten_response <- function(response, field = "results") {
     tibble::as_tibble()
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param route PARAM_DESCRIPTION
+#' @param params PARAM_DESCRIPTION, Default: NULL
+#' @param mode PARAM_DESCRIPTION, Default: c("raw", "table")
+#' @param method PARAM_DESCRIPTION, Default: c("GET", "POST")
+#' @param retry_times PARAM_DESCRIPTION, Default: 3
+#' @param retry_pause_min PARAM_DESCRIPTION, Default: 1
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[tibble]{as_tibble}}
+#' @rdname query_melodipresto
+#' @export 
+#' @importFrom tibble as_tibble
 query_melodipresto <- function(route, params = NULL,
                              mode = c("raw", "table"),
                              method = c("GET", "POST"),
@@ -1537,6 +2224,29 @@ query_melodipresto <- function(route, params = NULL,
   df <- do.call("rbind", l);
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param dat PARAM_DESCRIPTION
+#' @param clump_kb PARAM_DESCRIPTION, Default: 10000
+#' @param clump_r2 PARAM_DESCRIPTION, Default: 0.001
+#' @param clump_p1 PARAM_DESCRIPTION, Default: 1
+#' @param clump_p2 PARAM_DESCRIPTION, Default: 1
+#' @param pop PARAM_DESCRIPTION, Default: 'EUR'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[ieugwasr]{ld_clump}}
+#'  \code{\link[genetics.binaRies]{get_plink_binary}}
+#' @rdname clump_data_local_ld
+#' @export 
+#' @importFrom ieugwasr ld_clump
+#' @importFrom genetics.binaRies get_plink_binary
 clump_data_local_ld <- function (dat, clump_kb = 10000, clump_r2 = 0.001, clump_p1 = 1, 
                                  clump_p2 = 1, pop = "EUR") 
 {
@@ -1576,6 +2286,22 @@ clump_data_local_ld <- function (dat, clump_kb = 10000, clump_r2 = 0.001, clump_
   return(dat[keep, ])
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param db.path PARAM_DESCRIPTION
+#' @param q.vec PARAM_DESCRIPTION
+#' @param col.nm PARAM_DESCRIPTION
+#' @param table.nm PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname Query.PheMRDB
+#' @export 
 Query.PheMRDB <- function(db.path, q.vec, col.nm, table.nm){
   require('RSQLite');
   #db.path<<-db.path;
@@ -1614,6 +2340,25 @@ Query.PheMRDB <- function(db.path, q.vec, col.nm, table.nm){
   
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param query PARAM_DESCRIPTION
+#' @param scope PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[myvariant]{getVariants}}
+#'  \code{\link[mygene]{queryMany}}
+#' @rdname QueryMyVariant
+#' @export 
+#' @importFrom myvariant getVariants
+#' @importFrom mygene queryMany
 QueryMyVariant <- function(query, scope){
   # query<<-query;
   # scope<<-scope;
@@ -1676,6 +2421,19 @@ QueryMyVariant <- function(query, scope){
 
 }
 
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname QueryLDlink
+#' @export 
 QueryLDlink <- function(){
   library(LDlinkR)
   # Your token is: 9a329febb2bf
@@ -1694,6 +2452,35 @@ QueryLDlink <- function(){
 }
 
 # code adapted from gwasvcf R package
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param rsid PARAM_DESCRIPTION
+#' @param bfile PARAM_DESCRIPTION
+#' @param searchspace PARAM_DESCRIPTION, Default: NULL
+#' @param tag_kb PARAM_DESCRIPTION, Default: 5000
+#' @param tag_nsnp PARAM_DESCRIPTION, Default: 5000
+#' @param tag_r2 PARAM_DESCRIPTION, Default: 0.6
+#' @param threads PARAM_DESCRIPTION, Default: 1
+#' @param out PARAM_DESCRIPTION, Default: paste0(getwd(), "/")
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[gwasvcf]{check_plink}}
+#'  \code{\link[utils]{write.table}}
+#'  \code{\link[data.table]{fread}}
+#'  \code{\link[dplyr]{reexports}}, \code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}, \code{\link[dplyr]{arrange}}, \code{\link[dplyr]{desc}}
+#' @rdname get_ld_proxies
+#' @export 
+#' @importFrom gwasvcf check_plink
+#' @importFrom utils write.table
+#' @importFrom data.table fread
+#' @importFrom dplyr as_tibble filter mutate arrange desc
 get_ld_proxies <- function(rsid, bfile, searchspace=NULL, tag_kb=5000, tag_nsnp=5000, tag_r2=0.6, threads=1, out=paste0(getwd(),"/"))
 {
   stopifnot(gwasvcf::check_plink())
