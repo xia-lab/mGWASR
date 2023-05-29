@@ -5,20 +5,6 @@
 ###################################################
 
 # decompose to individual connected subnetworks, discard very small ones (defined by minNodeNum)
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param gObj PARAM_DESCRIPTION
-#' @param minNodeNum PARAM_DESCRIPTION, Default: 2
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname DecomposeGraph
-#' @export 
 DecomposeGraph <- function(gObj, minNodeNum = 2){
   mSetObj <- .get.mSet(mSetObj);
    #save.image("DecomposeGraph.RData")
@@ -82,19 +68,6 @@ DecomposeGraph <- function(gObj, minNodeNum = 2){
   return(sub.stats);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param nd.type PARAM_DESCRIPTION, Default: 'all'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname ReduceEdgeDensity
-#' @export 
 ReduceEdgeDensity <- function(nd.type="all"){
   mSetObj <- .get.mSet(mSetObj);
   all.nms <- V(mir.graph)$name;
@@ -135,28 +108,12 @@ ReduceEdgeDensity <- function(nd.type="all"){
   substats <- DecomposeGraph(mir.graph, 2);
   if(!is.null(substats)){
     mir.graph <<- mir.graph;
-    return(c(nrow(mSetObj$dataSet$mir.orig), length(unique(mSetObj$dataSet$mir.filtered[,"SNP"])), length(unique(mSetObj$dataSet$mir.filtered[,"MapName"])), ecount(mir.graph), length(mir.nets), substats));
+    return(c(nrow(mSetObj$dataSet$mir.orig), length(unique(mSetObj$dataSet$mir.filtered[,"ID1"])), length(unique(mSetObj$dataSet$mir.filtered[,"ID2"])), ecount(mir.graph), length(mir.nets), substats));
   }else{
     return(0);
   }
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param net.type PARAM_DESCRIPTION
-#' @param ids PARAM_DESCRIPTION
-#' @param id.type PARAM_DESCRIPTION
-#' @param remove PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname FilterNetByList
-#' @export 
 FilterNetByList <- function(net.type, ids, id.type, remove){
   mSetObj <- .get.mSet(mSetObj);
   
@@ -183,37 +140,10 @@ FilterNetByList <- function(net.type, ids, id.type, remove){
   }
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param net.nm PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname PrepareGraphML
-#' @export 
 PrepareGraphML <- function(net.nm){
   write.graph(mir.nets[[net.nm]], file=paste(net.nm, ".graphml", sep=""), format="graphml");
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mir.nm PARAM_DESCRIPTION
-#' @param file.nm PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname PrepareNet
-#' @export 
 PrepareNet <- function(mir.nm, file.nm){
   my.mirnet <- mir.nets[[mir.nm]];
   current.mirnet <<- my.mirnet;
@@ -225,22 +155,6 @@ PrepareNet <- function(mir.nm, file.nm){
   }
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param g PARAM_DESCRIPTION
-#' @param layers PARAM_DESCRIPTION
-#' @param algo PARAM_DESCRIPTION
-#' @param focus PARAM_DESCRIPTION, Default: ''
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname PerformLayOut
-#' @export 
 PerformLayOut <- function(g, layers, algo, focus=""){
   vc <- vcount(g);
   if(algo == "Default"){
@@ -308,21 +222,6 @@ PerformLayOut <- function(g, layers, algo, focus=""){
   pos.xy;
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param algo PARAM_DESCRIPTION
-#' @param filenm PARAM_DESCRIPTION
-#' @param focus PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname UpdateNetworkLayout
-#' @export 
 UpdateNetworkLayout <- function(algo, filenm, focus){
   # get layers
   mSetObj <- .get.mSet(mSetObj);
@@ -351,70 +250,18 @@ UpdateNetworkLayout <- function(algo, filenm, focus){
   return(filenm);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetNetNames
-#' @export 
 GetNetNames <- function(){
   rownames(net.stats);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetNetStats
-#' @export 
 GetNetStats <- function(){
   as.matrix(net.stats);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetNetsNameString
-#' @export 
 GetNetsNameString <- function(){
   paste(rownames(net.stats), collapse="||");
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname UpdateSubnetStats
-#' @export 
 UpdateSubnetStats <- function(){
   old.nms <- names(mir.nets);
   net.stats <- ComputeSubnetStats(mir.nets);
@@ -424,19 +271,6 @@ UpdateSubnetStats <- function(){
   net.stats <<- net.stats;
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param comps PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname ComputeSubnetStats
-#' @export 
 ComputeSubnetStats <- function(comps){
   mSetObj <- .get.mSet(mSetObj);
   net.stats <- as.data.frame(matrix(0, ncol = 3, nrow = length(comps)));
@@ -450,20 +284,6 @@ ComputeSubnetStats <- function(comps){
 }
 
 # from to should be valid nodeIDs
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param from PARAM_DESCRIPTION
-#' @param to PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetShortestPaths
-#' @export 
 GetShortestPaths <- function(from, to){
   
   paths <- get.all.shortest.paths(current.mirnet, from, to)$res;
@@ -490,19 +310,6 @@ GetShortestPaths <- function(from, to){
   return(all.paths);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param nodeids PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname ExtractNetModule
-#' @export 
 ExtractNetModule<- function(nodeids){
   set.seed(8574);
   nodes <- strsplit(nodeids, ";")[[1]];
@@ -557,20 +364,6 @@ ExtractNetModule<- function(nodeids){
 
 
 # exclude nodes in current.net (networkview)
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param nodeids PARAM_DESCRIPTION
-#' @param filenm PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname ExcludeNodes
-#' @export 
 ExcludeNodes <- function(nodeids, filenm){
   nodes2rm <- strsplit(nodeids, ";")[[1]];
   current.mirnet <- delete.vertices(current.mirnet, nodes2rm);
@@ -606,22 +399,6 @@ ExcludeNodes <- function(nodeids, filenm){
   return(filenm);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mSetObj PARAM_DESCRIPTION, Default: NA
-#' @param nd.type PARAM_DESCRIPTION
-#' @param min.dgr PARAM_DESCRIPTION
-#' @param min.btw PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname FilterBipartiNet
-#' @export 
 FilterBipartiNet <- function(mSetObj=NA, nd.type, min.dgr, min.btw){
   #save.image("FilterBipartiNet.RData")
   mSetObj <- .get.mSet(mSetObj);
@@ -671,23 +448,6 @@ FilterBipartiNet <- function(mSetObj=NA, nd.type, min.dgr, min.btw){
   }
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param g PARAM_DESCRIPTION
-#' @param filenm PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso 
-#'  \code{\link[igraph]{edge_attr}}
-#' @rdname convertIgraph2JSON
-#' @export 
-#' @importFrom igraph edge_attr
 convertIgraph2JSON <- function(g, filenm){
   #filenm<<-filenm;
   mSetObj <- .get.mSet(mSetObj);
@@ -695,7 +455,7 @@ convertIgraph2JSON <- function(g, filenm){
 
   #save.image("net.RData");
   nms <- V(g)$name;
-  lbls <- as.character(node.anot[nms]);
+  nd.ids <- as.character(node.anot[nms]);
 
   res <- mSetObj$dataSet$mir.res;
   my.nodes <- res[, c(1, 2)];
@@ -712,11 +472,14 @@ convertIgraph2JSON <- function(g, filenm){
   edge.p_values <- igraph::edge_attr(g, "EdgeAttr1");
   edge.n_pmids <- igraph::edge_attr(g, "EdgeAttr2");
   edge.type <- igraph::edge_attr(g, "EdgeType");
+  edge.predicate <- igraph::edge_attr(g, "Predicate");
   edge.sizes <- as.numeric(rescale2NewRange((edge.n_pmids), 0.5, 3));
   
   if(!is.null(edge.pmids)){
     edge.mat <- cbind(id=1:nrow(edge.mat), source=edge.mat[,1], target=edge.mat[,2], pmids=edge.pmids, p_values=edge.p_values, 
                       n_pmids=edge.n_pmids, esize=edge.sizes, etype=edge.type);
+  }else if(!is.null(edge.predicate)){
+    edge.mat <- cbind(id=1:nrow(edge.mat), source=edge.mat[,1], target=edge.mat[,2], predicate=edge.predicate);
   }else{
    edge.mat <- cbind(id=1:nrow(edge.mat), source=edge.mat[,1], target=edge.mat[,2], type=rep("arrow", nrow(edge.mat)));
   }
@@ -757,19 +520,31 @@ convertIgraph2JSON <- function(g, filenm){
   shapes[dis.inx] <- "circle";
   met.inx <- nms %in% net.info$met.nms;
   shapes[met.inx] <- "circle";
-  # merge positional gene mapping and eqtl mapping for now (L.C.)
-  gene.inx <- nms %in% c(net.info$gene.nms, net.info$eqtl.nms);
+  gene.inx <- nms %in% net.info$gene.nms;
+  egene.inx <- nms %in% net.info$egene.nms;
+  prot.inx <- nms %in% net.info$prot.nms;
   shapes[gene.inx] <- "diamond";
+  shapes[egene.inx] <- "diamond";
+  shapes[prot.inx] <- "diamond";
   drug.inx <- nms %in% net.info$drug.nms;
   shapes[drug.inx] <- "diamond";
-  
+  exp.inx <- nd.ids %in% net.info$exp.ids;
+  out.inx <- nd.ids %in% net.info$out.ids;
+  overlap.inx <- nd.ids %in% net.info$overlap.ids;
+  expsbj.inx <- nd.ids %in% net.info$expsbj.ids;
+  outobj.inx <- nd.ids %in% net.info$outobj.ids;
 
-  if(substring(anal.type, 1,3) == "snp"){ #highlight miRNA if they are the query
+  containsGP <- any(gene.nms %in% prot.nms) ## check if any overlap between gene and protein
+  cat("containsGP = ", containsGP, "\n")
+
+  if(substring(anal.type, 1,3) == "snp"){ #highlight SNP if they are the query
     node.sizes[snp.inx] <- node.sizes[snp.inx] + 1;
   }else{
     node.sizes[snp.inx] <- node.sizes[snp.inx] + 0.4;
   }
   node.sizes[gene.inx] <- node.sizes[gene.inx] + 1;
+  node.sizes[egene.inx] <- node.sizes[egene.inx] + 1;
+  node.sizes[prot.inx] <- node.sizes[prot.inx] + 1;
   node.sizes[drug.inx] <- node.sizes[drug.inx] + 1;
   # diamond shape is too small, make it slightly bigger
   node.types <- rep("", length(node.dgr));
@@ -777,18 +552,33 @@ convertIgraph2JSON <- function(g, filenm){
   node.types[snp.inx] <-  paste("SNP", node.types[snp.inx]);
   node.types[met.inx] <-  paste("Metabolite", node.types[met.inx]);
   node.types[gene.inx] <-  paste("Gene", node.types[gene.inx]);
+  node.types[egene.inx] <-  paste("eGene", node.types[egene.inx]);
+  node.types[prot.inx] <-  paste("Protein", node.types[prot.inx]);
   node.types[dis.inx] <-  paste("Disease", node.types[dis.inx]);
   node.types[drug.inx] <-  paste("Drug", node.types[drug.inx]);
-
+  node.types[exp.inx] <-  paste("Exposure", node.types[exp.inx]);
+  node.types[out.inx] <-  paste("Outcome", node.types[out.inx]);
+  node.types[overlap.inx] <-  paste("Overlap", node.types[overlap.inx]);
+  node.types[expsbj.inx] <-  paste("Exposure_Subject", node.types[expsbj.inx]);
+  node.types[outobj.inx] <-  paste("Outcome_Object", node.types[outobj.inx]);
+  
   n.types <- rep("", length(node.dgr));
   n.types[snp.inx] <- "SNP";
   n.types[met.inx] <- "Metabolite";
   n.types[dis.inx] <- "Disease";
   n.types[gene.inx] <- "Gene";
+  n.types[egene.inx] <- "eGene";
+  n.types[prot.inx] <- "Protein";
   n.types[drug.inx] <- "Drug";
-
+  n.types[exp.inx] <- "Exposure";
+  n.types[out.inx] <- "Outcome";
+  n.types[overlap.inx] <- "Overlap";
+  n.types[expsbj.inx] <- "Exposure_Subject";
+  n.types[outobj.inx] <- "Outcome_Object";
+  
   node.types <-  trimws(node.types);
-  node.types <-  gsub(" ", "_", node.types);
+  # this is the same as types in omicsnet
+  #node.types <-  gsub(" ", "_", node.types);
   
   node.cols <- rep("#ff4500", length(node.dgr));
   ntype <- unique(n.types)
@@ -800,7 +590,6 @@ convertIgraph2JSON <- function(g, filenm){
   node.cols[snp.inx] <- "#306EFF"; # dark blue
   # update mir node color
   topo.colsw <- node.cols;
-  colVec  <- unique(node.cols);
   node.cols[snp.inx] <- "#98F5FF";
   topo.colsb <- node.cols;
   
@@ -835,6 +624,30 @@ convertIgraph2JSON <- function(g, filenm){
     node.colsw.exp <- rep("#c6c6c6",length(node.exp));
   }
   
+  topo.colsw[snp.inx] <- "#bcbd22";
+  topo.colsw[met.inx] <- "#2ca02c";
+  topo.colsw[gene.inx] <- "#1f77b4";
+  topo.colsw[prot.inx] <- "#e377c2";
+  topo.colsw[egene.inx] <- "#d62728"; 
+  topo.colsw[dis.inx] <- "#9467bd"; 
+
+  topo.colsw[exp.inx] <- "#bcbd22";
+  topo.colsw[out.inx] <- "#2ca02c";
+  topo.colsw[overlap.inx] <- "#e49444"; # 2
+  topo.colsw[expsbj.inx] <- "#5778a4";  # 1
+  topo.colsw[outobj.inx] <- "#6a9f58";  # 3
+  
+  topo.colsb <- topo.colsw;
+  colVec  <- unique(topo.colsw);
+
+  # if(containsGP){
+  #   topo.colsb[gene.inx] <- "#D3D3D3";
+  #   topo.colsw[gene.inx] <- "#D3D3D3";
+  #   color.vec <- c("#D3D3D3", "#FF8484", "#39FF14","#00f6ff", "#D3D3D3", "#00ffff", "#ffff00", "#ff9900", "#39FF14");
+  # }else{
+  #   color.vec <- c("#FF8484", "#FF8484", "#39FF14","#00f6ff", "#D3D3D3", "#00ffff", "#ffff00", "#ff9900", "#39FF14");
+  # }
+  
   seed.nms <- unique(rownames(mSetObj$dataSet$mir.mapped)[!is.na(rownames(mSetObj$dataSet$mir.mapped))])
   seed.inx <- nms %in% seed.nms;
   seed_arr <- rep("notSeed",length(node.dgr));
@@ -850,9 +663,10 @@ convertIgraph2JSON <- function(g, filenm){
       molType=node.types[i],
       type=shapes[i],
       seedArr =seed_arr[i],
-      url=lbls[i],
+      url=nd.ids[i],
       colorb=topo.colsb[i],
       colorw=topo.colsw[i],
+      color=topo.colsw[i],
       x=pos.xy[i,1],
       y=pos.xy[i,2],
       attributes=list(
@@ -881,11 +695,13 @@ convertIgraph2JSON <- function(g, filenm){
   
   edge.mat  <- cbind(edge.mat, color=edge.color);
   netData <- list(mirnet=net.type, 
-                  #mirtarget=dataSet$mirtarget, 
-                  #organism=dataSet$org, 
                   nodes=nodes, 
                   edges=edge.mat, 
                   nodeColors = colVec, 
+                  prot.nms=prot.nms,
+                  gene.nms=gene.nms, 
+                  snp.nms=snp.nms, 
+                  containsGP=containsGP,
                   nodeTypes=ntype);
   sink(filenm);
   cat(toJSON(netData));
@@ -902,19 +718,6 @@ convertIgraph2JSON <- function(g, filenm){
 }
 
 # return information based on node type
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param g PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetNetStatByType
-#' @export 
 GetNetStatByType <- function(g){
    # qs::qsave(g,"g.qs")
    # save.image("GetNetStatByType.RData")
@@ -930,19 +733,6 @@ GetNetStatByType <- function(g){
   return(my.stat);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetQueryNum
-#' @export 
 GetQueryNum <-function(){
   if(net.type=="metabo_phenotypes"){
     return(as.numeric(net.stats$Query))
@@ -951,19 +741,6 @@ GetQueryNum <-function(){
   return(mSetObj$dataSet$query.nums)
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetTypeNum
-#' @export 
 GetTypeNum <-function(){
   if(net.type=="metabo_phenotypes"){
     return(as.numeric(net.stats$Node))
@@ -972,24 +749,17 @@ GetTypeNum <-function(){
   return(mSetObj$dataSet$type.nums)
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param table.nm PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname PrepareCSV
-#' @export 
 PrepareCSV <- function(table.nm){
-  #table.nm<<-table.nm;
-  #save.image("PrepareCSV.RData")
+  # table.nm<<-table.nm;
+  # save.image("PrepareCSV.RData")
   mSetObj <- .get.mSet(mSetObj);
-  if(table.nm=="manhattan"){
+  if(table.nm=="mr_res_single"){
+    fast.write.csv(mSetObj$dataSet$mr_res_single, file=paste(table.nm, ".csv", sep=""), row.names = FALSE);
+  }else if(table.nm=="mr_res_loo"){
+    fast.write.csv(mSetObj$dataSet$mr_res_loo, file=paste(table.nm, ".csv", sep=""), row.names = FALSE);
+  }else if(table.nm=="mr_res"){
+    fast.write.csv(mSetObj$dataSet$mr_results, file=paste(table.nm, ".csv", sep=""), row.names = FALSE);
+  }else if(table.nm=="manhattan"){
     fast.write.csv(mSetObj$dataSet$snp2met, file=paste(table.nm, ".csv", sep=""), row.names = FALSE);
   } else if(anal.type == "multilist" || anal.type == "snp2mir" || anal.type == "tf2genemir" || anal.type == "gene2tfmir"){
     fast.write.csv(mSetObj$dataSet[[table.nm]], file=paste(table.nm, ".csv", sep=""), row.names = FALSE);
@@ -998,59 +768,42 @@ PrepareCSV <- function(table.nm){
   }
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetTableNames
-#' @export 
 GetTableNames <- function(){
   #save.image("GetTableNames.RData")
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$mirtable;
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetSeedsColumn
-#' @export 
 GetSeedsColumn <- function(){
+  #save.image("GetSeedsColumn.RData")
   mSetObj <- .get.mSet(mSetObj);
   tbls = unique(mSetObj$dataSet$mirtable);
   vec = vector();
   for( i in 1:length(tbls)){
     nms = strsplit(tbls[i], "2")[[1]];
     orignms = nms;
+    nms= gsub("lit", "Literature",nms);
     nms= gsub("snp", "SNP",nms)
+    nms= gsub("gene_eqtl", "eGene",nms);
     nms= gsub("gene", "Gene",nms)
     nms= gsub("met_study", "Metabolite",nms)
     nms= gsub("met", "Metabolite",nms)
     nms= gsub("dis", "Disease",nms)
     nms= gsub("pos", "Positional Mapping",nms)
     nms= gsub("snp_pos", "Positional Mapping",nms)
-    nms= gsub("eqtl", "eQTL",nms);
     nms= gsub("drug", "Drug",nms);
+    nms= gsub("protein", "Protein",nms); # this is for ppi
+    nms= gsub("prot", "Protein",nms); # this is for snp2protein
+    nms= gsub("mr", "MR",nms);
     
-    if(nms[1] == "protein"){
+    if(tbls[i] %in% c("protein2protein")){
       vec[i]=paste0(nms[1],":" ,length(unique(mSetObj$dataSet[tbls[i]][[1]][,1])) + length(unique(mSetObj$dataSet[tbls[i]][[1]][,2])) )
     }else if(tbls[i] %in% c("snp2gene")){
       vec[i]=paste0(nms[1],":" ,length(unique(mSetObj$dataSet[tbls[i]][[1]][,2])),", ",nms[2],": ",length(unique(mSetObj$dataSet[tbls[i]][[1]][,9])))
+    }else if(tbls[i] %in% c("snp2egene")){
+      vec[i]=paste0(nms[1],":" ,length(unique(mSetObj$dataSet[tbls[i]][[1]][,1])),", ",nms[2],": ",length(unique(mSetObj$dataSet[tbls[i]][[1]][,4])))
+    }else if(tbls[i] %in% c("snp2prot")){
+      vec[i]=paste0(nms[1],":" ,length(unique(mSetObj$dataSet[tbls[i]][[1]][,1])),", ",nms[2],": ",length(unique(mSetObj$dataSet[tbls[i]][[1]][,3])))
     }else if(tbls[i] %in% c("gene2snp")){
       vec[i]=paste0(nms[1],":" ,length(unique(mSetObj$dataSet[tbls[i]][[1]][,6])),", ",nms[2],": ",length(unique(mSetObj$dataSet[tbls[i]][[1]][,1])))
     }else if(tbls[i] %in% c("snp2dis")){
@@ -1073,6 +826,8 @@ GetSeedsColumn <- function(){
       vec[i]=paste0(nms[1],":" ,length(unique(mSetObj$dataSet[tbls[i]][[1]][,4])),", ",nms[2],": ",length(unique(mSetObj$dataSet[tbls[i]][[1]][,1])))
     }else if(orignms[1] == "dis"){
       vec[i]=paste0(nms[1],":" ,length(unique(mSetObj$dataSet[tbls[i]][[1]][,1])),", ",nms[2],": ",length(unique(mSetObj$dataSet[tbls[i]][[1]][,2])))
+    }else if(tbls[i] %in% c("mr2lit")){
+      vec[i]=paste0(nms[1],":" ,length(unique(c(mSetObj$dataSet[tbls[i]][[1]][,1],mSetObj$dataSet[tbls[i]][[1]][,11]))),", ",nms[2],": ",length(unique(mSetObj$dataSet[tbls[i]][[1]][,6])))
     }else{
       vec[i]=paste0(nms[1],":" ,length(unique(dataSet[tbls[i]][[1]][,1])),", ",nms[2],": ",length(unique(dataSet[tbls[i]][[1]][,3])))
     }
@@ -1080,22 +835,6 @@ GetSeedsColumn <- function(){
   return(vec)
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param imgNm PARAM_DESCRIPTION
-#' @param netNm PARAM_DESCRIPTION, Default: 'NA'
-#' @param dpi PARAM_DESCRIPTION, Default: 72
-#' @param format PARAM_DESCRIPTION, Default: 'png'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname PlotDegreeHistogram
-#' @export 
 PlotDegreeHistogram <- function(imgNm, netNm = "NA", dpi=72, format="png"){
   require('Cairo');
   require('igraph');
@@ -1127,22 +866,6 @@ PlotDegreeHistogram <- function(imgNm, netNm = "NA", dpi=72, format="png"){
   dev.off();
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param imgNm PARAM_DESCRIPTION
-#' @param netNm PARAM_DESCRIPTION, Default: 'NA'
-#' @param dpi PARAM_DESCRIPTION, Default: 72
-#' @param format PARAM_DESCRIPTION, Default: 'png'
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname PlotBetweennessHistogram
-#' @export 
 PlotBetweennessHistogram <- function(imgNm, netNm = "NA",dpi=72, format="png"){
   require('Cairo');
   require('igraph');
@@ -1173,19 +896,6 @@ PlotBetweennessHistogram <- function(imgNm, netNm = "NA",dpi=72, format="png"){
   dev.off();
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param netnm PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetNetworkTopology
-#' @export 
 GetNetworkTopology <- function(netnm){
   #save.image("GetNetworkTopology.RData")
   g <- mir.graph;
@@ -1200,20 +910,6 @@ GetNetworkTopology <- function(netnm){
 }
 
 # support walktrap, infomap and lab propagation
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param method PARAM_DESCRIPTION, Default: 'walktrap'
-#' @param use.weight PARAM_DESCRIPTION, Default: FALSE
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname FindCommunities
-#' @export 
 FindCommunities <- function(method="walktrap", use.weight=FALSE){
   mSetObj <- .get.mSet(mSetObj);
   
@@ -1297,20 +993,6 @@ FindCommunities <- function(method="walktrap", use.weight=FALSE){
   return(all.communities);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param net.type PARAM_DESCRIPTION
-#' @param max.len PARAM_DESCRIPTION, Default: 200
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetMinConnectedGraphs
-#' @export 
 GetMinConnectedGraphs <- function(net.type, max.len = 200){
   mSetObj <- .get.mSet(mSetObj);
   dataSet <- mSetObj$dataSet;
@@ -1369,19 +1051,6 @@ GetMinConnectedGraphs <- function(net.type, max.len = 200){
   }
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname ComputePCSFNet
-#' @export 
 ComputePCSFNet <- function(){
   mSetObj <- .get.mSet(mSetObj);
   dataSet <- mSetObj$dataSet;
@@ -1430,29 +1099,6 @@ ComputePCSFNet <- function(){
 
 # Adapted from PCSF
 # https://github.com/IOR-Bioinformatics/PCSF
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param ppi PARAM_DESCRIPTION
-#' @param terminals PARAM_DESCRIPTION
-#' @param w PARAM_DESCRIPTION, Default: 2
-#' @param b PARAM_DESCRIPTION, Default: 1
-#' @param mu PARAM_DESCRIPTION, Default: 5e-04
-#' @param dummies PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso 
-#'  \code{\link[igraph]{degree}}
-#'  \code{\link[XiaLabCppLib]{call_sr}}
-#' @rdname Compute.SteinerForest
-#' @export 
-#' @importFrom igraph degree
-#' @importFrom XiaLabCppLib call_sr
 Compute.SteinerForest <- function(ppi, terminals, w = 2, b = 1, mu = 0.0005, dummies){
   
   # Gather the terminal genes to be analyzed, and their scores
@@ -1510,7 +1156,9 @@ Compute.SteinerForest <- function(ppi, terminals, w = 2, b = 1, mu = 0.0005, dum
     
     # Contruct an igraph object from the MST-PCSF output
     e <- data.frame(output[[1]], output[[2]], output[[3]])
-    e <- e[which(e[,2]!="DUMMY"), ]
+    keep.inx <- which(e[,2]!="DUMMY");
+    e <- e[keep.inx, ]
+    
     names(e) <- c("from", "to", "weight")
     
     # Differentiate the type of nodes
@@ -1522,7 +1170,7 @@ Compute.SteinerForest <- function(ppi, terminals, w = 2, b = 1, mu = 0.0005, dum
     v <- data.frame(output[[4]], output[[5]], type)
     names(v) <- c("terminals", "prize", "type")
     subnet <- graph.data.frame(e,vertices=v,directed=F)
-    E(subnet)$weight <- as.numeric(output[[3]])
+    E(subnet)$weight <- as.numeric(output[[3]][keep.inx])
     subnet <- delete_vertices(subnet, "DUMMY")
     subnet <- delete_vertices(subnet, names(which(degree(subnet)==0)));
     return(subnet)
@@ -1533,21 +1181,6 @@ Compute.SteinerForest <- function(ppi, terminals, w = 2, b = 1, mu = 0.0005, dum
   }
 }
 
-
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mSetObj PARAM_DESCRIPTION, Default: NA
-#' @param net.type PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname CreateGraph
-#' @export 
 CreateGraph <- function(mSetObj=NA, net.type){
   
   net.type<<-net.type; # necessary for table stats
@@ -1559,15 +1192,15 @@ CreateGraph <- function(mSetObj=NA, net.type){
   }
   
   res <- mSetObj$dataSet$mir.res;
-  my.edges <- res[,c(1,3)];
-  my.edges <- as.data.frame(my.edges);
-  nd.nms <- c(res[, 1], res[, 3]);
-  nd.ids <- c(res[, 2], res[, 4]);
-  names(nd.ids) <- nd.nms;
-  dups <- duplicated(nd.ids); #note using unique will lose the names attribute
-  node.anot <<- nd.ids[!dups];
-  colnames(my.edges) = c("from", "to");
-  
+    my.edges <- res[,c(1,3)];
+    my.edges <- as.data.frame(my.edges);
+    nd.nms <- c(res[, 1], res[, 3]);
+    nd.ids <- c(res[, 2], res[, 4]);
+    names(nd.ids) <- nd.nms;
+    dups <- duplicated(nd.ids); #note using unique will lose the names attribute
+    node.anot <<- nd.ids[!dups];
+    colnames(my.edges) = c("from", "to");
+
   if(query.type=="studyview"){
     my.edges <- as.data.frame(res[, c(1,3,6)]); # name1, name2, and p-value
     if(nrow(my.edges) > 10000){
@@ -1576,7 +1209,12 @@ CreateGraph <- function(mSetObj=NA, net.type){
       my.edges <- my.edges[!is.na(top.inx), ,drop=F];
     }
     mir.graph <-simplify( graph_from_data_frame(my.edges, directed=FALSE, vertices=NULL), edge.attr.comb="first");
-  }else {
+  }else if(query.type=="mrmodule"){
+
+    my.edges <- as.data.frame(res[, c(1,3,5)]); # name1, name2, and predicate
+    mir.graph <-simplify( graph_from_data_frame(my.edges, directed=FALSE, vertices=NULL), edge.attr.comb="first");
+    
+  }else{
     my.edges <- as.data.frame(res[, c(1,3,5:8)]);
     mir.graph <-simplify( graph_from_data_frame(my.edges, directed=FALSE, vertices=NULL), edge.attr.comb="first");
   }

@@ -4,21 +4,6 @@
 ## Author: Jeff Xia, jeff.xia@mcgill.ca
 ###################################################
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param file.nm PARAM_DESCRIPTION
-#' @param fun.type PARAM_DESCRIPTION
-#' @param IDs PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname PerformNetEnrichment
-#' @export 
 PerformNetEnrichment <- function(file.nm, fun.type, IDs){
     # prepare query
     ora.vec <- NULL;
@@ -31,26 +16,6 @@ PerformNetEnrichment <- function(file.nm, fun.type, IDs){
 
 # note: hit.query, resTable must synchronize
 # ora.vec should contains entrez ids, named by their gene symbols
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param file.nm PARAM_DESCRIPTION
-#' @param fun.type PARAM_DESCRIPTION
-#' @param ora.vec PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso 
-#'  \code{\link[qs]{qread}}
-#'  \code{\link[rjson]{toJSON}}
-#' @rdname PerformEnrichAnalysis
-#' @export 
-#' @importFrom qs qread
-#' @importFrom rjson toJSON
 PerformEnrichAnalysis <- function(file.nm, fun.type, ora.vec){
   org.code <- "hsa";
   if(fun.type %in% c("keggc", "smpdb")){
@@ -250,19 +215,6 @@ PerformEnrichAnalysis <- function(file.nm, fun.type, ora.vec){
   qs::qsave(current.mset, "current.geneset.qs");
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param symbol.vec PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname doSymbol2EntrezMapping
-#' @export 
 doSymbol2EntrezMapping <- function(symbol.vec){
   db.path <- paste("../../data/hsa/entrez.rds", sep="");
   if(!.on.public.web){
@@ -281,56 +233,35 @@ doSymbol2EntrezMapping <- function(symbol.vec){
   return(entrezs);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param ldclumpOpt PARAM_DESCRIPTION
-#' @param ldProxies PARAM_DESCRIPTION
-#' @param ldThresh PARAM_DESCRIPTION
-#' @param pldSNPs PARAM_DESCRIPTION
-#' @param mafThresh PARAM_DESCRIPTION
-#' @param harmonizeOpt PARAM_DESCRIPTION
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso 
-#'  \code{\link[TwoSampleMR]{clump_data}}, \code{\link[TwoSampleMR]{extract_outcome_data}}, \code{\link[TwoSampleMR]{harmonise_data}}, \code{\link[TwoSampleMR]{mr}}, \code{\link[TwoSampleMR]{mr_heterogeneity}}, \code{\link[TwoSampleMR]{mr_pleiotropy_test}}, \code{\link[TwoSampleMR]{mr_singlesnp}}, \code{\link[TwoSampleMR]{mr_leaveoneout}}
-#' @rdname PerformMRAnalysis
-#' @export 
-#' @importFrom TwoSampleMR clump_data extract_outcome_data harmonise_data mr mr_heterogeneity mr_pleiotropy_test mr_singlesnp mr_leaveoneout
 PerformMRAnalysis <- function(ldclumpOpt, ldProxies, ldThresh, pldSNPs, mafThresh, harmonizeOpt){
-  #ldclumpOpt<<-ldclumpOpt;
-  #ldProxies<<-ldProxies;
-  #ldThresh<<-ldThresh;
-  #pldSNPs<<-pldSNPs;
-  #mafThresh<<-mafThresh;
-  #harmonizeOpt<<-harmonizeOpt;
-  #save.image("PerformMRAnalysis.RData")
+  # ldclumpOpt<<-ldclumpOpt;
+  # ldProxies<<-ldProxies;
+  # ldThresh<<-ldThresh;
+  # pldSNPs<<-pldSNPs;
+  # mafThresh<<-mafThresh;
+  # harmonizeOpt<<-harmonizeOpt;
+  # save.image("PerformMRAnalysis.RData")
   mSetObj <- .get.mSet(mSetObj);
   
   # get instruments
   exposure.dat <- mSetObj$dataSet$exposure;
   # missing sample size, 
-  exposure.dat <- exposure.dat[,c("P-value", "Chr", "SE","Beta","BP","HMDB","SNP","A1","A2","Common Name")]
-  colnames(exposure.dat) <- c("pval.exposure","chr.exposure","se.exposure","beta.exposure","pos.exposure","id.exposure","SNP","effect_allele.exposure","other_allele.exposure","exposure")
+  exposure.dat <- exposure.dat[,c("P-value", "Chr", "SE","Beta","BP","HMDB","SNP","A1","A2","EAF","Common Name")]
+  colnames(exposure.dat) <- c("pval.exposure","chr.exposure","se.exposure","beta.exposure","pos.exposure","id.exposure","SNP","effect_allele.exposure","other_allele.exposure","eaf.exposure","exposure")
   exposure.snp <- mSetObj$dataSet$exposure$SNP;
   outcome.id <- mSetObj$dataSet$outcome$id;
   # LD clumping
   if(ldclumpOpt!="no_ldclump"){
-    exposure.dat <- TwoSampleMR::clump_data(exposure.dat);
+    exposure.dat <- clump_data_local_ld(exposure.dat);
+    exposure.snp <- exposure.dat$SNP;
   }
   # get effects of instruments on outcome
   outcome.dat <- TwoSampleMR::extract_outcome_data(snps=exposure.snp, outcomes = outcome.id, proxies = as.logical(ldProxies),
                                                    rsq = as.numeric(ldThresh), palindromes=as.numeric(as.logical(pldSNPs)), maf_threshold=as.numeric(mafThresh))
   fast.write.csv(outcome.dat, file="mr_outcome_data.csv", row.names=FALSE);
   # harmonise the exposure and outcome data
-  # need to have allele frequency to harmonize
-  exposure.dat$eaf.exposure <- rep("NA",nrow(exposure.dat))
   dat <- TwoSampleMR::harmonise_data(exposure.dat, outcome.dat, action = as.numeric(harmonizeOpt));
+  fast.write.csv(dat, file="mr_harmonized_data.csv", row.names=FALSE);
   # perform mr
   method.type <- mSetObj$dataSet$methodType;
   mr.res <- TwoSampleMR::mr(dat, method_list = method.type);
@@ -340,18 +271,29 @@ PerformMRAnalysis <- function(ldclumpOpt, ldProxies, ldThresh, pldSNPs, mafThres
   mr_heterogeneity.res <- TwoSampleMR::mr_heterogeneity(dat);
   rownames(mr_heterogeneity.res) <- mr_heterogeneity.res$method;
   fast.write.csv(mr_heterogeneity.res, file="mr_heterogeneity_results.csv", row.names=FALSE);
-  mSetObj$dataSet$mr.hetero_mat <- round(data.matrix(mr_heterogeneity.res[6:8]),3) #"Q"           "Q_df"        "Q_pval"
+  #"Q"           "Q_df"        "Q_pval"
+  mSetObj$dataSet$mr.hetero_mat <- round(data.matrix(mr_heterogeneity.res[6:8]),3) 
   
   # Test for directional horizontal pleiotropy
   mr_pleiotropy_test.res <- TwoSampleMR::mr_pleiotropy_test(dat);
   fast.write.csv(mr_pleiotropy_test.res, file="mr_pleiotropy_results.csv", row.names=FALSE);
-  mSetObj$dataSet$mr.pleio_mat <- signif(data.matrix(mr_pleiotropy_test.res[5:7]),2)
+  mr.hetero.num <- mr_heterogeneity.res[5:8];
+  mr.res.num <- mr.res[5:9];
+  mr.pleio.num <- mr_pleiotropy_test.res[5:7];
+  mr.pleio.num$method <- "MR Egger";
+  merge1 <- merge(mr.res.num, mr.hetero.num, by="method", all.x=TRUE);
+  merge2 <- merge(merge1, mr.pleio.num, by="method", all.x=TRUE);
+  rownames(merge2) <- merge2$method;
+  merge2 <- signif(merge2[2:11], 5);
+  merge2[is.na(merge2)] <- "-";
+  mSetObj$dataSet$mr_results_merge <- merge2
+  mSetObj$dataSet$mr.pleio_mat <- signif(data.matrix(mr_pleiotropy_test.res[5:7]),5)
   mSetObj$dataSet$mr_results <- mr.res;
   fast.write.csv(mr.res, file="mr_results.csv", row.names=FALSE);
   mSetObj$dataSet$mr_dat <- dat;
-  mSetObj$dataSet$mr.res_mat <- signif(data.matrix(mr.res[6:9]), 3) #"nsnp","b","se","pval" 
+  mSetObj$dataSet$mr.res_mat <- signif(data.matrix(mr.res[6:9]), 5) #"nsnp","b","se","pval" 
 
-  res_single <- TwoSampleMR::mr_singlesnp(dat);
+  res_single <- TwoSampleMR::mr_singlesnp(dat, all_method = method.type);
   mSetObj$dataSet$mr_res_single <- res_single;
   res_loo <- TwoSampleMR::mr_leaveoneout(dat);
   mSetObj$dataSet$mr_res_loo <- res_loo;
@@ -364,60 +306,21 @@ PerformMRAnalysis <- function(ldclumpOpt, ldProxies, ldThresh, pldSNPs, mafThres
   }
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mSetObj PARAM_DESCRIPTION, Default: NA
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetMRRes.rowNames
-#' @export 
 GetMRRes.rowNames<-function(mSetObj=NA){
   #save.image("GetMRRes.rowNames.RData")
   mSetObj <- .get.mSet(mSetObj);
-  nms <- rownames(mSetObj$dataSet$mr.res_mat);
+  nms <- rownames(mSetObj$dataSet$mr_results_merge);
   if(is.null(nms)){
     return("NA");
   }
   return (nms);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mSetObj PARAM_DESCRIPTION, Default: NA
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetMRRes.mat
-#' @export 
 GetMRRes.mat<-function(mSetObj=NA){
   mSetObj <- .get.mSet(mSetObj);
-  return(mSetObj$dataSet$mr.res_mat);
+  return(mSetObj$dataSet$mr_results_merge);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mSetObj PARAM_DESCRIPTION, Default: NA
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetHeteroRes.rowNames
-#' @export 
 GetHeteroRes.rowNames<-function(mSetObj=NA){
   #save.image("GetHeteroRes.rowNames.RData")
   mSetObj <- .get.mSet(mSetObj);
@@ -428,38 +331,211 @@ GetHeteroRes.rowNames<-function(mSetObj=NA){
   return (nms);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mSetObj PARAM_DESCRIPTION, Default: NA
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetHeteroRes.mat
-#' @export 
 GetHeteroRes.mat<-function(mSetObj=NA){
   mSetObj <- .get.mSet(mSetObj);
   return(mSetObj$dataSet$mr.hetero_mat);
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mSetObj PARAM_DESCRIPTION, Default: NA
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @rdname GetPleioRes.mat
-#' @export 
 GetPleioRes.mat<-function(mSetObj=NA){
   mSetObj <- .get.mSet(mSetObj);
   return(mSetObj$dataSet$mr.pleio_mat);
+}
+
+GetMRMat<-function(mSetObj=NA, type){
+  # type<<-type;
+  # save.image("GetMRMat.RData")
+  mSetObj <- .get.mSet(mSetObj);
+  if(type == "single"){
+    sig.mat <- mSetObj$dataSet$mr_res_single;
+  }else if(type == "loo"){
+    sig.mat <- mSetObj$dataSet$mr_res_loo;
+  }else{
+    sig.mat <- mSetObj$dataSet$mr_results;
+  }
+  return(CleanNumber(signif(as.matrix(sig.mat),5)));
+}
+
+GetMRMatRowNames<-function(mSetObj=NA, type){
+  mSetObj <- .get.mSet(mSetObj);
+  if(type == "single"){
+    return(rownames(mSetObj$dataSet$mr_res_single));
+  }else if(type == "loo"){
+    return(rownames(mSetObj$dataSet$mr_res_loo));
+  }else{
+    return(rownames(mSetObj$dataSet$mr_results))
+  }
+}
+
+GetMRMatColNames<-function(mSetObj=NA, type){
+  mSetObj <- .get.mSet(mSetObj);
+  if(type == "single"){
+    return(colnames(mSetObj$dataSet$mr_res_single));
+  }else if(type == "loo"){
+    return(colnames(mSetObj$dataSet$mr_res_loo));
+  }else{
+    return(colnames(mSetObj$dataSet$mr_results))
+  }
+}
+
+# QueryLiterature <- function(exposure, outcome) {
+#   .init.multilist();
+#   exposure<<-exposure;
+#   outcome<<-outcome;
+#   save.image("QueryLiterature.RData")
+#   mSetObj <- .get.mSet(mSetObj);
+#   
+#   # endpoint <- "/literature/gwas/pairwise"
+#   # https://docs.epigraphdb.org/api/api-endpoints/
+#   # params <- list(
+#   #   trait = exposure,
+#   #   assoc_trait = outcome,
+#   #   by_gwas_id = FALSE,
+#   #   pval_threshold = 0.1,
+#   #   semmantic_types = "nusq",
+#   #   semmantic_types = "dsyn",
+#   #   blacklist = TRUE,
+#   #   limit = 10,
+#   #   skip = 0,
+#   #   fuzzy = TRUE
+#   # )
+#   # lit_df <- query_epigraphdb(route = endpoint, params = params, mode = "table", method = "GET")
+#   # this is for query epigraphdb API, too slow......
+#   endpoint <- "/overlap/"
+#   params <- list(
+#     x = exposure,
+#     y = outcome
+#   )
+#   lit_df <- query_epigraphdb(route = endpoint, params = params, mode = "raw", method = "POST")
+#   hit.num <- nrow(lit_df);
+#   if (hit.num == 0) {
+#     current.msg <<- "No hits found in the literarure evidence database.";
+#     print(current.msg);
+#     return(0);
+#   } else{
+#     # X    gwas.trait
+#     # X pval    gs1.pval
+#     # X subject    st1.name
+#     # X predicate    s1.predicate 
+#     # Overlap    st.name
+#     # Y Predicate    s2.predicate
+#     # Y Object    st2.name 
+#     # Y Pval    gs2.pval
+#     # Y    assoc_gwas.trait
+#     res <- as.data.frame(lit_df[ , c("gwas.trait","gs1.pval","st1.name","s1.predicate", "st.name", "s2.predicate","st2.name", "gs2.pval","assoc_gwas.trait")]);
+#     colnames(res) <- c("Exposure", "Exposure_Pval", "Exposure_Subject", "Exposure_Predicate", "Overlap", "Outcome_Predicate", "Outcome_Object", "Outcome_Pval", "Outcome");
+#     fast.write.csv(res, file="mr_lit_evidence.csv", row.names=FALSE);
+#     res <- res[order(res$`Outcome_Pval`),];
+#     mSetObj$dataSet$mr2lit <- res; # for table display
+#     exp.nms <<- res[,"Exposure"];
+#     out.nms <<- res[,"Outcome"];
+#     overlap.nms <<- res[,"Overlap"];
+#     sbjobj.nms <<- c(res[,"Exposure_Subject"], res[,"Outcome_Object"]);
+#     # 4 types of edges
+#     # exposure -> s1 subject
+#     edge1 <- data.frame(Name1=(res$Exposure), Name2=res$Exposure_Subject, Predicate=rep("", nrow(res)), stringsAsFactors = FALSE);
+#     # s2 object -> outcome
+#     edge2 <- data.frame(Name1=res$Outcome_Object, Name2=res$Outcome, Predicate=rep("", nrow(res)), stringsAsFactors = FALSE);
+#     # s1 subject - s1 predicate -> s1 object
+#     edge3 <- data.frame(Name1=res$Exposure_Subject, Name2=res$Overlap, Predicate=res$Exposure_Predicate, stringsAsFactors = FALSE);
+#     # s2 subject - s2 predicate -> s2 object
+#     edge4 <- data.frame(Name1=res$Overlap, Name2=res$Outcome_Object, Predicate=res$Outcome_Predicate, stringsAsFactors = FALSE);
+#     edges.all <- list(mir.resu, edge1, edge2, edge3, edge4);
+#     
+#     mir.resu <- do.call("rbind", edges.all);
+#     
+#     mSetObj$dataSet$tableStats <- data.frame(Query=length(unique(c(exp.nms, out.nms))),Mapped=length(unique(c(overlap.nms, sbjobj.nms))),stringsAsFactors = FALSE);
+#     seedsu <<- c(seedsu, exp.nms, out.nms);
+#     mirtableu <<- c(mirtableu, "mr2lit");
+#     net.info <<- .set.net.names("mr2lit");
+#     mSetObj$dataSet$mir.res <- mir.resu;
+#     mSetObj$dataSet$mirtarget <- mirtargetu;
+#     mSetObj$dataSet$mirtable <- unique(mirtableu);
+#     .set.mSet(mSetObj);
+#     print(11111)
+#     if(.on.public.web){
+#       print(2222)
+#       return(1);
+#     }else{
+#       return(current.msg);
+#     }
+#   }
+# }
+
+QueryLiteratureMelodiPresto <- function(exposure, outcome) {
+  .init.multilist();
+  #exposure<<-exposure;
+  #outcome<<-outcome;
+  #save.image("QueryLiteratureMelodi.RData")
+  mSetObj <- .get.mSet(mSetObj);
+  endpoint <- "/overlap/"
+  params <- list(
+    x = exposure,
+    y = outcome
+  )
+  lit_df <- query_melodipresto(route = endpoint, params = params, mode = "raw", method = "POST")
+  hit.num <- nrow(lit_df);
+  if (hit.num == 0) {
+    current.msg <<- "No hits found in the literarure evidence database.";
+    print(current.msg);
+    return(0);
+  } else{
+    # Q1 term    set_x
+    # Q1 subject    subject_name_x
+    # Q1 predicate   predicate_x
+    # Q1 object    object_name_x **********
+    # Q1 pval       pval_x
+    # Q1 pmid       pmids_x
+    # Q2 subject    subject_name_y **********
+    # Q2 predicate    predicate_y
+    # Q2 object    object_name_y
+    # Q2 pval    pval_y
+    # Q2 pmid    pmids_y
+    # Q2 term    set_y
+    #An overlap is taken to be cases where the object of a triple from the set of ‘x’ queries overlaps with a subject from the set of ‘y’ queries    
+    res <- as.data.frame(lit_df[ , c("set_x","subject_name_x", "predicate_x", "pval_x","pmids_x" , "object_name_x", "predicate_y","object_name_y","pval_y","pmids_y","set_y")]);
+    res$pval_x <- signif(res$pval_x, digits = 5);
+    res$pval_y <- signif(res$pval_y, digits = 5);
+
+    colnames(res) <- c("Exposure","Exposure_Subject","Exposure_Predicate", "Exposure_Pval","Exposure_PMIDs",  "Overlap", "Outcome_Predicate", "Outcome_Object", "Outcome_Pval", "Outcome_PMIDs","Outcome");
+    fast.write.csv(res, file="mr_lit_evidence.csv", row.names=FALSE);
+    res <- res[order(res$Outcome_Pval),];
+    mSetObj$dataSet$mr2lit <- res; # for table display
+    # 4 types of edges
+    # exposure -> s1 subject
+    #edge1 <- data.frame(Name1=(res$Exposure), ID1=(paste(res$Exposure,"exposure", sep="_")), Name2=res$Exposure_Subject, ID2=paste(res$Exposure_Subject, "e_subject", sep="_"), Predicate=rep("", nrow(res)), stringsAsFactors = FALSE);
+    #exp.ids <<- edge1[,"ID1"];
+    #expsbj.ids <<- edge1[,"ID2"];
+    # s2 object -> outcome
+    #edge2 <- data.frame(Name1=res$Outcome_Object, ID1=paste(res$Outcome_Object, "o_object", sep="_"), Name2=res$Outcome, ID2=paste(res$Outcome,"outcome",sep="_"), Predicate=rep("", nrow(res)), stringsAsFactors = FALSE);
+    #outobj.ids <<- edge2[,"ID1"]
+    #out.ids <<- edge2[,"ID2"];
+    # s1 subject - s1 predicate -> s1 object
+    edge3 <- data.frame(Name1=res$Exposure_Subject, ID1=paste(res$Exposure_Subject,"e_subject", sep="_"), Name2=res$Overlap, ID2=paste(res$Overlap,"overlap",sep="_"), Predicate=res$Exposure_Predicate, stringsAsFactors = FALSE);
+    expsbj.ids <<- edge3[,"ID1"];
+    overlap.ids <<- edge3[,"ID2"];
+    # s2 subject - s2 predicate -> s2 object
+    edge4 <- data.frame(Name1=res$Overlap, ID1=paste(res$Overlap, "overlap", sep="_"), Name2=res$Outcome_Object, ID2=paste(res$Outcome_Object, "o_object", sep="_"), Predicate=res$Outcome_Predicate, stringsAsFactors = FALSE);
+    outobj.ids <<- edge4[,"ID2"]
+    #edges.all <- list(mir.resu, edge1, edge2, edge3, edge4);
+    edges.all <- list(mir.resu, edge3, edge4);
+    mir.resu <- do.call("rbind", edges.all);
+    
+    mSetObj$dataSet$tableStats <- data.frame(Query=2,Mapped=length(unique(c(overlap.ids, expsbj.ids, outobj.ids))),stringsAsFactors = FALSE);
+    #seedsu <<- c(seedsu, exp.ids, out.ids);
+    seedsu <<- c(seedsu, exposure, outcome);
+    mirtableu <<- c(mirtableu, "mr2lit");
+    net.info <<- .set.net.names("mr2lit");
+    mSetObj$dataSet$mir.res <- mir.resu;
+    mSetObj$dataSet$mirtarget <- mirtargetu;
+    mSetObj$dataSet$mirtable <- unique(mirtableu);
+    seeds <- rbind(unique(res[,1]), unique(res[,11]));
+    rownames(seeds) <- seeds[,1];
+    mSetObj$dataSet$mir.mapped <- seeds;
+    .set.mSet(mSetObj);
+    if(.on.public.web){
+      return(1);
+    }else{
+      return(current.msg);
+    }
+  }
 }

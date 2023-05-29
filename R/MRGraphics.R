@@ -1,23 +1,3 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mSetObj PARAM_DESCRIPTION, Default: NA
-#' @param imgName PARAM_DESCRIPTION
-#' @param format PARAM_DESCRIPTION, Default: 'png'
-#' @param dpi PARAM_DESCRIPTION, Default: 72
-#' @param width PARAM_DESCRIPTION, Default: NA
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso 
-#'  \code{\link[Cairo]{Cairo}}
-#' @rdname PlotScatter
-#' @export 
-#' @importFrom Cairo Cairo
 PlotScatter<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   imgName <<-imgName;
   #save.image("PlotScatter.RData")
@@ -32,13 +12,13 @@ PlotScatter<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   imgName = paste(imgName, "dpi", dpi, ".", format, sep="");
   
   if(is.na(width)){
-    w <- 9;
+    w <- 12;
   }else if(width == 0){
     w <- 7;
   }else{
     w <-width;
   }
-  h <- w;
+  h <- 9;
   
   #record img
   mSetObj$imgSet$mr.scatter <- imgName
@@ -93,7 +73,7 @@ PlotScatter<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
       ggplot2::geom_abline(data=mrres, ggplot2::aes(intercept=a, slope=b, colour=method), show.legend=TRUE) +
       ggplot2::scale_colour_manual(values=c("#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928")) +
       ggplot2::labs(colour="MR Test", x=paste("SNP effect on", d$exposure[1]), y=paste("SNP effect on", d$outcome[1])) +
-      ggplot2::theme(legend.position="top", legend.direction="vertical") +
+      ggplot2::theme(legend.position="right", legend.direction="vertical") +
       ggplot2::guides(colour=ggplot2::guide_legend(ncol=2))
     print(p);
     dev.off();
@@ -101,26 +81,6 @@ PlotScatter<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #mrres
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mSetObj PARAM_DESCRIPTION, Default: NA
-#' @param imgName PARAM_DESCRIPTION
-#' @param format PARAM_DESCRIPTION, Default: 'png'
-#' @param dpi PARAM_DESCRIPTION, Default: 72
-#' @param width PARAM_DESCRIPTION, Default: NA
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso 
-#'  \code{\link[Cairo]{Cairo}}
-#' @rdname PlotForest
-#' @export 
-#' @importFrom Cairo Cairo
 PlotForest<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #imgName <<-imgName;
   #save.image("PlotForest.RData")
@@ -216,26 +176,6 @@ PlotForest<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #res
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mSetObj PARAM_DESCRIPTION, Default: NA
-#' @param imgName PARAM_DESCRIPTION
-#' @param format PARAM_DESCRIPTION, Default: 'png'
-#' @param dpi PARAM_DESCRIPTION, Default: 72
-#' @param width PARAM_DESCRIPTION, Default: NA
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso 
-#'  \code{\link[Cairo]{Cairo}}
-#' @rdname PlotLeaveOneOut
-#' @export 
-#' @importFrom Cairo Cairo
 PlotLeaveOneOut<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #imgName <<-imgName;
   #save.image("PlotLeaveOneOut.RData")
@@ -317,26 +257,6 @@ PlotLeaveOneOut<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #res
 }
 
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param mSetObj PARAM_DESCRIPTION, Default: NA
-#' @param imgName PARAM_DESCRIPTION
-#' @param format PARAM_DESCRIPTION, Default: 'png'
-#' @param dpi PARAM_DESCRIPTION, Default: 72
-#' @param width PARAM_DESCRIPTION, Default: NA
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples 
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
-#' @seealso 
-#'  \code{\link[Cairo]{Cairo}}
-#' @rdname PlotFunnel
-#' @export 
-#' @importFrom Cairo Cairo
 PlotFunnel<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   #imgName <<-imgName;
   #save.image("PlotFunnel.RData")
@@ -348,13 +268,13 @@ PlotFunnel<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
   imgName = paste(imgName, "dpi", dpi, ".", format, sep="");
   
   if(is.na(width)){
-    w <- 9;
+    w <- 12;
   }else if(width == 0){
     w <- 7;
   }else{
     w <-width;
   }
-  h <- w;
+  h <- 9;
   
   #record img
   mSetObj$imgSet$mr.scatter <- imgName
@@ -393,7 +313,7 @@ PlotFunnel<-function(mSetObj=NA, imgName, format="png", dpi=72, width=NA){
                                               "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", 
                                               "#6a3d9a", "#ffff99", "#b15928")) +
       ggplot2::labs(y=expression(1/SE[IV]), x=expression(beta[IV]), colour="MR Method") +
-      ggplot2::theme(legend.position="top", legend.direction="vertical")
+      ggplot2::theme(legend.position="right", legend.direction="vertical")
     print(p);
     dev.off();
   })
