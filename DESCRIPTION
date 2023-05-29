@@ -6,6 +6,10 @@ Authors@R: c(
       role = c("cre", "aut"),
       comment = c(ORCID = "0000-0002-0966-7923")
     ),
+    person("Guangyan", "Zhou", email = "guangyan.zhou@mail.mcgill.ca",
+      role = c("aut"),
+      comment = c(ORCID = "0000-0002-0966-7923")
+    ),
     person("Jianguo", "Xia", email = "jeff.xia@mcgill.ca",
       role = c("aut"),
       comment = c(ORCID = "0000-0003-2040-2624"))

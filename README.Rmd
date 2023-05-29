@@ -16,10 +16,6 @@ knitr::opts_chunk$set(
 # mGWASR <img src="man/figures/mgwas_logo.png" align="right" alt="" width="120" />
 #### A companion R package for the mGWAS-Explorer web server
 
-<!-- badges: start -->
-<!-- badges: end -->
-Note - mGWASR is still under development - we cannot guarantee full functionality.
-
 ## Description
 
 **mGWASR** contains the R functions and libraries underlying the [mGWAS-Explorer](https://www.mgwas.ca/) web server. After installing and loading the package, users will be able to reproduce the same results from their local computers using the corresponding R command history downloaded from mGWAS-Explorer, thereby achieving maximum flexibility and reproducibility.
@@ -77,7 +73,10 @@ mGWASR has been developed by the [Xia Lab](http://xialab.ca/) at McGill Universi
 
 We encourage users to further develop the package to suit their needs. If you use the R package, please cite us:
 
+Chang, L., Zhou, G., & Xia, J. (2023). mGWAS-Explorer 2.0: causal analysis and interpretation of metabolite-phenotype associations. *Under review*
+
 Chang, L., Zhou, G., Ou, H., & Xia, J. (2022). mGWAS-Explorer: Linking SNPs, Genes, Metabolites, and Diseases for Functional Insights. Metabolites, 12(6), 526. https://doi.org/10.3390/metabo12060526
+
 
 ## Bugs or feature requests
 

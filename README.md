@@ -5,12 +5,6 @@
 
 #### A companion R package for the mGWAS-Explorer web server
 
-<!-- badges: start -->
-<!-- badges: end -->
-
-Note - mGWASR is still under development - we cannot guarantee full
-functionality.
-
 ## Description
 
 **mGWASR** contains the R functions and libraries underlying the
@@ -90,6 +84,10 @@ University. The original manuscript (web-based version) can be found
 
 We encourage users to further develop the package to suit their needs.
 If you use the R package, please cite us:
+
+Chang, L., Zhou, G., & Xia, J. (2023). mGWAS-Explorer 2.0: causal
+analysis and interpretation of metabolite-phenotype associations. *Under
+review*
 
 Chang, L., Zhou, G., Ou, H., & Xia, J. (2022). mGWAS-Explorer: Linking
 SNPs, Genes, Metabolites, and Diseases for Functional Insights.
