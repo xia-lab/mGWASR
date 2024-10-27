@@ -34,5 +34,5 @@ if(interactive()){
 \seealso{
 \code{\link[glue]{glue}}
 \code{\link[httr]{add_headers}}, \code{\link[httr]{RETRY}}
-\code{\link[jsonlite]{toJSON, fromJSON}}
+\code{\link[rjson]{toJSON}}
 }

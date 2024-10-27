@@ -37,5 +37,4 @@ if(interactive()){
 }
 \seealso{
 \code{\link[igraph]{degree}}
-\code{\link[XiaLabCppLib]{call_sr}}
 }

@@ -28,12 +28,20 @@ To use mGWASR , first install all package dependencies. Ensure that you are able
 
 ```R
 install.packages("pacman")
+install.packages("remotes")
 
 library(pacman)
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("BiocParallel")
+if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
+remotes::install_github("MRCIEU/genetics.binaRies")
+remotes::install_github("mrcieu/gwasvcf")
+remotes::install_github("MRCIEU/TwoSampleMR")
 
-# need to update the depdencies
+pacman::p_load(RSQLite, igraph,  BiocParallel,  pryr,  httr,  reshape,  ggplot2,  RJSONIO,  RCurl,  XML,  ggforce,  graphlayouts,  compiler,  dplyr,  RColorBrewer,  Cairo,  plyr,  qs,  rjson,  TwoSampleMR, mygene, myvariant)
 
-pacman::p_load(RSQLite, igraph,  BiocParallel,  pryr,  httr,  reshape,  ggplot2,  RJSONIO,  RCurl,  XML,  ggforce,  graphlayouts,  compiler,  dplyr,  RColorBrewer,  Cairo,  plyr,  qs,  rjson,  TwoSampleMR)
+
 ```
 ### Step 2. Install the package
 

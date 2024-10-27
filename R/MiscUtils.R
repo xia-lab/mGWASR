@@ -5,6 +5,8 @@
 ###################################################
 
 # need to obtain the full path to convert (from imagemagik) for cropping images
+
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 
@@ -565,6 +567,8 @@ Query.DisGeNETDB <- function(db.path, q.vec, table.nm, col.nm){
 }
 
 # Load httr
+
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 
@@ -583,6 +587,8 @@ load_httr <- function(){
 }
 
 # Load reshape, necessary for graphics
+
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 
@@ -621,6 +627,8 @@ overlap_ratio <- function(x, y) {
 }
 
 # Load ggplot2
+
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 
@@ -710,7 +718,7 @@ Prepare3DManhattanJSON <- function(pmid){
   qs.filenm <- paste0(qs.dir, pmid, ".qs");
   json.res <- qs::qread(qs.filenm);
   library(RJSONIO)
-  json.mat <- toJSON(json.res, .na='null');
+  json.mat <- toJSON(json.res);
   file.nm <- "manhattan_0.json";
   sink(file.nm)
   cat(json.mat);
@@ -721,6 +729,8 @@ Prepare3DManhattanJSON <- function(pmid){
     return(paste("JSON files are downloaded!"))
   }
 }
+
+
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
@@ -748,7 +758,7 @@ PrepareMiamiJSON <- function(){
   qs.filenm <- paste0(qs.dir, ".qs");
   json.res <- qs::qread(qs.filenm);
   library(RJSONIO)
-  json.mat <- toJSON(json.res, .na='null');
+  json.mat <- toJSON(json.res);
   file.nm <- "miami_0.json";
   sink(file.nm)
   cat(json.mat);
@@ -967,7 +977,7 @@ PrepareMiamiJSON <- function(){
 #' @export 
 QueryVEP <- function(q.vec,vepDis,content_type="application/json" ){
   library(httr)
-  #library(jsonlite)
+  #library(rjson)
   #library(xml2)
   server <- "http://rest.ensembl.org"
   ext <- "/vep/human/id/"
@@ -1695,6 +1705,8 @@ getApiResult <- function(url="NA", init=TRUE){
   return(json_data)
 }
 
+
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 
@@ -1715,6 +1727,8 @@ GetCompleteMetList <- function(){
   return(met.nms);
 }
 
+
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 
@@ -1734,6 +1748,8 @@ GetCompletePheMRMetDisList <- function(){
   dis.nms <- .get.my.lib("phemr_browse_dis_nms.qs")
   return(c(met.nms, dis.nms));
 }
+
+
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
@@ -1794,6 +1810,8 @@ CleanNumber <-function(bdata){
   }
   bdata;
 }
+
+
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
@@ -2032,12 +2050,12 @@ api_get_request <- function(route, params,
 #' @seealso 
 #'  \code{\link[glue]{glue}}
 #'  \code{\link[httr]{add_headers}}, \code{\link[httr]{RETRY}}
-#'  \code{\link[jsonlite]{toJSON, fromJSON}}
+#'  \code{\link[rjson]{toJSON}}
 #' @rdname api_post_request
 #' @export 
 #' @importFrom glue glue
 #' @importFrom httr add_headers RETRY
-#' @importFrom jsonlite toJSON
+#' @importFrom rjson toJSON
 api_post_request <- function(route, params,
                              retry_times, retry_pause_min) {
   #route<<-route;
@@ -2056,8 +2074,8 @@ api_post_request <- function(route, params,
     as.character() %>%
     tolower()
   config <- httr::add_headers(.headers = c("client-type" = "R", "ci" = is_ci))
-  # body <- jsonlite::toJSON(params, auto_unbox = TRUE) # this is for epigraphdb query
-  body <- jsonlite::toJSON(params);
+  # body <- rjson::toJSON(params, auto_unbox = TRUE) # this is for epigraphdb query
+  body <- rjson::toJSON(params);
   response <- httr::RETRY(
     "POST",
     url = url, body = body, config = config,
@@ -2153,20 +2171,20 @@ stop_for_status <- function(response, context) {
 #' }
 #' @seealso 
 #'  \code{\link[httr]{content}}
-#'  \code{\link[jsonlite]{toJSON, fromJSON}}
+#'  \code{\link[rjson]{fromJSON}}
 #'  \code{\link[purrr]{pluck}}
 #'  \code{\link[tibble]{as_tibble}}
 #' @rdname flatten_response
 #' @export 
 #' @importFrom httr content
-#' @importFrom jsonlite fromJSON
+#' @importFrom rjson fromJSON
 #' @importFrom purrr pluck
 #' @importFrom tibble as_tibble
 flatten_response <- function(response, field = "results") {
   library(magrittr) # for pipe operation %>% 
   response %>%
     httr::content(as = "text", encoding = "utf-8") %>%
-    jsonlite::fromJSON(flatten = TRUE) %>%
+    rjson::fromJSON(flatten = TRUE) %>%
     purrr::pluck(field) %>%
     tibble::as_tibble()
 }
@@ -2420,6 +2438,8 @@ QueryMyVariant <- function(query, scope){
   return(output.df);
 
 }
+
+
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION

@@ -29,7 +29,7 @@ if(interactive()){
 }
 \seealso{
 \code{\link[httr]{content}}
-\code{\link[jsonlite]{toJSON, fromJSON}}
+\code{\link[rjson]{fromJSON}}
 \code{\link[purrr]{pluck}}
 \code{\link[tibble]{as_tibble}}
 }

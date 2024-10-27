@@ -351,6 +351,7 @@ UpdateNetworkLayout <- function(algo, filenm, focus){
   return(filenm);
 }
 
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 
@@ -367,6 +368,7 @@ UpdateNetworkLayout <- function(algo, filenm, focus){
 GetNetNames <- function(){
   rownames(net.stats);
 }
+
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
@@ -385,6 +387,7 @@ GetNetStats <- function(){
   as.matrix(net.stats);
 }
 
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 
@@ -401,6 +404,7 @@ GetNetStats <- function(){
 GetNetsNameString <- function(){
   paste(rownames(net.stats), collapse="||");
 }
+
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
@@ -986,6 +990,7 @@ GetNetStatByType <- function(g){
   return(my.stat);
 }
 
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 
@@ -1006,6 +1011,7 @@ GetQueryNum <-function(){
   mSetObj <- .get.mSet(mSetObj);
   return(mSetObj$dataSet$query.nums)
 }
+
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
@@ -1060,6 +1066,7 @@ PrepareCSV <- function(table.nm){
   }
 }
 
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 
@@ -1078,6 +1085,7 @@ GetTableNames <- function(){
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$mirtable;
 }
+
 
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
@@ -1442,6 +1450,7 @@ GetMinConnectedGraphs <- function(net.type, max.len = 200){
   }
 }
 
+
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION
 
@@ -1521,12 +1530,11 @@ ComputePCSFNet <- function(){
 #' }
 #' @seealso 
 #'  \code{\link[igraph]{degree}}
-#'  \code{\link[XiaLabCppLib]{call_sr}}
 #' @rdname Compute.SteinerForest
 #' @export 
 #' @importFrom igraph degree
-#' @importFrom XiaLabCppLib call_sr
 Compute.SteinerForest <- function(ppi, terminals, w = 2, b = 1, mu = 0.0005, dummies){
+  
   
   # Gather the terminal genes to be analyzed, and their scores
   terminal_names <- names(terminals)
@@ -1576,7 +1584,11 @@ Compute.SteinerForest <- function(ppi, terminals, w = 2, b = 1, mu = 0.0005, dum
   }
   
   ## Feed the input into the PCSF algorithm
-  output <- XiaLabCppLib::call_sr(from,to,cost,node_names,node_prizes)
+#  if(.on.public.web){
+#    require("XiaLabCppLib")
+#    output <- XiaLabCppLib::call_sr(from,to,cost,node_names,node_prizes)
+#  }
+  
   
   # Check the size of output subnetwork and print a warning if it is 0
   if(length(output[[1]]) != 0){
