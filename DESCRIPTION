@@ -44,7 +44,24 @@ Imports:
   genetics.binaRies,
   gwasvcf,
   mygene,
-  myvariant
+  myvariant,
+  coloc,
+  gwasglue,
+  gwasvcf,
+  hash,
+  pheatmap,
+  RCurl
+Depends: 
+    dplyr,    
+    parallel,
+    future,
+    future.apply,
+    ieugwasr,
+    ldscr,
+    locuscomparer,
+    progressr,
+    plinkbinr,
+    VariantAnnotation
 Suggests: 
     knitr,
     rmarkdown,

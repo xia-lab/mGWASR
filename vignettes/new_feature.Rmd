@@ -1,0 +1,128 @@
+---
+title: "new_feature"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{new_feature}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(mGWASR)
+library(stringr)
+```
+
+## get GWAS ID from ieu OpenGWAS database
+
+get GWAS ID from OpenGWAS.
+
+Please get OpenGWAS API token from <https://api.opengwas.io/>
+
+```{r}
+Sys.setenv(OPENGWAS_JWT="your API token")
+```
+
+```{r}
+allGWAS <- ieugwasr::gwasinfo()
+```
+
+Alternatively, obtain the GWAS ID from the downloaded table in this R package.
+
+```{r}
+allGWAS_file <- system.file("extdata", "2024_allGWAS.csv", package = "mGWASR")
+allGWAS <- read.csv(allGWAS_file,row.names = 1)
+```
+
+## Find causal SNPs through finemap
+
+Select the chromosome regions of interest
+
+```{r}
+region <- '11:58780549-62223771'
+```
+
+Searching for causal SNPs of a specific GWAS in regions of interest
+
+```{r include=FALSE}
+casusalsnp <- findcausalSNP(region,'ebi-a-GCST007515',threshold = 0.8, bfile = 'bfile/EUR') #Please specify the bfile file path
+```
+
+## Find co-localization relationships in large batches
+
+Extract the GWAS ID of the metabolites
+
+```{r}
+pheno2 <- allGWAS[stringr::str_detect(allGWAS$id, "met-a|met-c"),'id']
+```
+
+Search for co localization relationships between pheno1 and multiple pheno2 in regions centered around causal SNPs (which can be multiple)
+
+```{r}
+batch_coloc('ebi-a-GCST007515', pheno2, rsid_or_pos = casusalsnp,region = 500000,output_dir = '') #region is usually 500kb-2Mb
+```
+
+Perform single co localization and plot
+
+```{r}
+single_res <- colocal('ebi-a-GCST007515',pheno2[1],rsid_or_pos = casusalsnp[1],region = 500000,plot = T)
+#Alternatively, you can use a VCF file
+#a <- colocal('pheno1_vcf_file','pheno2_vcf_file',rsid_or_pos = casusalsnp[1],region = 500000,plot = T)
+```
+
+## Perform LDSC analysis in batches conveniently to estimate heritability and genetic correlation
+
+Download GWAS sumstats of interest
+
+```{r}
+phenos <- allGWAS %>%
+  filter(grepl("Type 2 diabetes", trait, ignore.case = TRUE) & population == "European")
+download_ieuvcf(phenos$id,'T2D_EUR_vcf/')
+```
+
+Filter successful downloads
+
+```{r}
+phenos <- download_status %>%
+  filter(status == "Success")
+```
+
+Convert VCF files to intermediate RDS files required for LDSC analysis
+
+```{r}
+ldsc_file <- vcf2ldsc('T2D_EUR_vcf/',saveRDS = T,output_dir = 'T2D_EUR_vcf_rds',num_cores = 5)
+```
+
+Batch calculate the heritability of each phenotype
+
+```{r}
+ldsc_h2 <- batch_ldsc_h2('T2D_EUR_vcf_rds/',num_cores = 8)
+```
+
+Pair all objects pairwise and calculate the genetic correlation between every two
+
+```{r}
+ldsc_res <- pair_ldsc('T2D_EUR_vcf_rds/',output_dir = 'T2D_EUR_res/',para_plan  = 'multicore',num_cores = 8)
+```
+
+Merge genetic correlation results and filter them based on conditions to create a table for drawing
+
+```{r}
+com_res <- combine_filter('T2D_EUR_res/',traits = c('ebi-a-GCST005047.vcf',
+  'ebi-a-GCST005413.vcf',
+  'ieu-a-1090.vcf',
+  'ukb-b-13806.vcf',
+  'ebi-a-GCST007517.vcf'))
+```
+
+Plot a correlation heatmap
+
+```{r}
+plot <- cor_plot(com_res)
+```

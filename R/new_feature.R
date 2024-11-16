@@ -1,15 +1,18 @@
-#' Title
+#' Batch download VCF files from ieu openGWAS database
 #'
-#' @param IDlist
-#' @param path
-#' @param timeout
+#' @param IDlist The GWAS ID in the ieu database you want to download
+#' @param path The path where the file is saved
+#' @param timeout Download timeout setting
 #'
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples download_ieuvcf(c('bbj-a-86','bbj-a-94','bbj-a-99'), './', timeout = 600)
 download_ieuvcf <- function(IDlist, path, timeout=600) {
   options(timeout = timeout)
+  if (!dir.exists(path)) {
+    dir.create(path)
+  }
   download_status <- data.frame(gwasID = IDlist, status = "Failed", stringsAsFactors = FALSE)
   failed_downloads <- c()  # 用于存储下载失败的文件ID
 
@@ -209,34 +212,54 @@ ieu_finemap <- function (region, id, bfile, plink_bin = genetics.binaRies::get_p
 #' Title
 #'
 #' @param regionlist
-#' @param ieuid
 #' @param bfile
+#' @param id_or_vcf 
+#' @param threshold 
 #'
 #' @return
 #' @export
 #'
 #' @examples
 findcausalSNP <- function(regionlist,id_or_vcf,threshold = 0.8,bfile){
-  finemap_snp <- c()
+  finemap_df <- data.frame(matrix(ncol = 1, nrow = length(regionlist)))
+  rownames(finemap_df) <- regionlist
+  colnames(finemap_df) <- id_or_vcf
   # 先检查 id_or_vcf 是文件还是 ID
   vcf_exists <- file.exists(id_or_vcf)
   for (i in 1:length(regionlist)) {
-    if (vcf_exists) {
-      # 如果存在 VCF 文件，使用 vcf_finemap
-      dat <- vcf_finemap(region = regionlist[i], vcf = id_or_vcf, bfile = bfile)
-    } else {
-      # 如果不存在 VCF 文件，使用 ieu_finemap
-      dat <- ieu_finemap(region = regionlist[i], id = id_or_vcf, bfile = bfile)
-    }
-    fitted_rss <- susieR::susie_rss(
-      dat[[1]]$z$zscore,
-      dat[[1]]$ld,
-      mean(dat[[1]]$n))
+    # 尝试执行代码，并捕获错误
+    dat <- tryCatch({
+      if (vcf_exists) {
+        # 如果存在 VCF 文件，使用 vcf_finemap
+        vcf_finemap(region = regionlist[i], vcf = id_or_vcf, bfile = bfile)
+      } else {
+        # 如果不存在 VCF 文件，使用 ieu_finemap
+        ieu_finemap(region = regionlist[i], id = id_or_vcf, bfile = bfile)
+      }
+    }, error = function(e) {
+      NULL  # 返回 NULL 以继续循环
+    })
+    # 如果 dat 有效，则进行 susie_rss 分析
+    fitted_rss <- tryCatch({
+      susieR::susie_rss(
+        dat[[1]]$z$zscore,
+        dat[[1]]$ld,
+        mean(dat[[1]]$n)
+      )
+    }, error = function(e) {
+      NULL  # 返回 NULL 以继续循环
+    })
     merged_data <- tryCatch(unlist(strsplit(summary(fitted_rss)$cs$variable, ",")), error = function(e) NULL)
-    new_finemap_snp <- names(which(fitted_rss$pip>threshold))[which(fitted_rss$pip>threshold) %in% merged_data]
-    finemap_snp <- c(finemap_snp,new_finemap_snp)
+    new_finemap_snp <- tryCatch(names(which(fitted_rss$pip>threshold))[which(fitted_rss$pip>threshold) %in% merged_data], error = function(e) NULL)
+    # 将找到的SNP作为单元格填入数据框
+    if (length(new_finemap_snp) > 0) {
+      finemap_df[i, 1] <- paste(new_finemap_snp, collapse = ", ")
+    } else {
+      finemap_df[i, 1] <- NA  # 若未找到SNP，填入NA
+    }
+    gc()
   }
-  return(finemap_snp)
+  return(finemap_df)
 }
 
 #batch_coloc: single pheno1, multiple pheno2
@@ -250,13 +273,14 @@ findcausalSNP <- function(regionlist,id_or_vcf,threshold = 0.8,bfile){
 #' @export
 #'
 #' @examples
-batch_coloc <- function(pheno1, pheno2, rsid_or_pos, region) {
+batch_coloc <- function(pheno1, pheno2, rsid_or_pos, region, output_dir) {
   for (snppos in rsid_or_pos) {
   csvname <- paste0(basename(pheno1),'_',snppos, '.csv')
-  if (grepl("^rs[0-9]+$", rsid_or_pos)) {
+  csvfile <- paste0(output_dir, '/',csvname)
+  if (all(grepl("^rs[0-9]+$", rsid_or_pos))) {
     snppos <- variants_rsid(rsid_or_pos, opengwas_jwt = get_opengwas_jwt())
     pos_region = paste0(snppos$chr, ":", snppos$pos - region, "-", snppos$pos + region)
-  } else if (grepl("^[0-9XYM]+:[0-9]+$", rsid_or_pos)) {
+  } else if (all(grepl("^[0-9XYM]+:[0-9]+$", rsid_or_pos))) {
     pos_region = paste0(sub(":.*", "", rsid_or_pos), ":", sub(".*:", "", rsid_or_pos) - region, "-", sub(".*:", "", rsid_or_pos) + region)
   } else {
     stop('Please input a valid rsID or SNP position.')
@@ -291,7 +315,7 @@ batch_coloc <- function(pheno1, pheno2, rsid_or_pos, region) {
 
   all_res <- bind_rows(res_list)
   # 保存结果到CSV文件
-  write.csv(all_res, csvname, row.names = FALSE)
+  write.csv(all_res, csvfile, row.names = FALSE)
   print(paste0("Saved results for ", csvname))
   }
 }
@@ -538,33 +562,56 @@ pair_ldsc <- function(path, output_dir, ancestry = "EUR", para_plan='multicore',
 }
 
 
-#' Title
+#' Combine and Filter CSV Files
 #'
-#' @param path
-#' @param traits
-#' @param ...
+#' This function reads and combines CSV files from a specified directory or a single CSV file. It allows filtering of the combined data based on specified traits and additional conditions.
+#'
+#' @param path A character string specifying the path to a directory containing CSV files, or a single CSV file path. 
+#' @param traits A character vector of traits for filtering. Only rows where 'trait1' and 'trait2' match the specified traits will be retained.
+#' @param ... conditions for filtering, including trait1, trait2, rg, rg_se, rg_p
 #'
 #' @return
 #' @export
 #'
 #' @examples
-combine_filter <- function(path,traits=NULL,...){
+combine_filter <- function(path, traits = NULL, ...) {
   require(dplyr)
-  csv_files <- list.files(path, pattern = "\\.csv$", full.names = TRUE)
-  all_data <- do.call(rbind, lapply(csv_files, function(file) {
-    read.csv(file, header = TRUE,row.names = 1)  # 假设所有文件都有相同的列名和结构
-  }))
+  # 获取所有 CSV 文件路径
+  if (file.exists(path) && grepl("\\.csv$", path)) {
+    # 如果 path 是 CSV 文件路径，直接读取
+    all_data <- read.csv(path, header = TRUE)
+  } else {
+    # 否则，获取路径下的所有 CSV 文件
+    csv_files <- list.files(path, pattern = "\\.csv$", full.names = TRUE)
+    # 读取 CSV 文件，并跳过空文件或有格式错误的文件
+    all_data <- do.call(rbind, lapply(csv_files, function(file) {
+      tryCatch({
+        # 尝试读取文件
+        read.csv(file, header = TRUE, row.names = 1)
+      }, error = function(e) {
+        message("跳过空文件或无法读取的文件: ", file)
+        NULL  # 返回 NULL 以便在 rbind 时跳过该文件
+      })
+    }))
+    # 如果没有有效数据，返回空数据框
+    if (is.null(all_data)) {
+      message("未读取到任何有效数据。")
+      return(data.frame())  # 返回空数据框
+    }
+  }
+
+  # 根据 traits 参数筛选
   if (!is.null(traits)) {
-    # 筛选 trait1 和 trait2 包含这些值的行
     all_data <- all_data %>%
       filter(trait1 %in% traits & trait2 %in% traits)
   }
   # 获取传入的条件
   conditions <- rlang::exprs(...)
-  # 使用 dplyr 的 filter 来根据条件筛选
+  # 使用 dplyr 的 filter 根据条件筛选
   filtered_data <- all_data %>% filter(!!!conditions)
   return(filtered_data)
 }
+
 
 #' Title
 #'
@@ -593,7 +640,9 @@ cor_plot <- function(data){
 
     # 上三角显示显著性水平
     p_value <- data$rg_p[i]
-    if (p_value <= 0.001) {
+    if (is.na(p_value)) {
+      display_matrix[data$trait2[i], data$trait1[i]] <- ""
+    } else if (p_value <= 0.001) {
       display_matrix[data$trait2[i], data$trait1[i]] <- "***"
     } else if (p_value <= 0.01) {
       display_matrix[data$trait2[i], data$trait1[i]] <- "**"
