@@ -2,13 +2,17 @@
 % Please edit documentation in R/new_feature.R
 \name{combine_filter}
 \alias{combine_filter}
-\title{Title}
+\title{Combine and Filter CSV Files}
 \usage{
 combine_filter(path, traits = NULL, ...)
 }
 \arguments{
-\item{...}{}
+\item{path}{A character string specifying the path to a directory containing CSV files, or a single CSV file path.}
+
+\item{traits}{A character vector of traits for filtering. Only rows where 'trait1' and 'trait2' match the specified traits will be retained.}
+
+\item{...}{conditions for filtering, including trait1, trait2, rg, rg_se, rg_p}
 }
 \description{
-Title
+This function reads and combines CSV files from a specified directory or a single CSV file. It allows filtering of the combined data based on specified traits and additional conditions.
 }

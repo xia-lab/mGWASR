@@ -2,13 +2,32 @@
 % Please edit documentation in R/new_feature.R
 \name{colocal}
 \alias{colocal}
-\title{Title}
+\title{Perform Co-localization Analysis}
 \usage{
 colocal(gwas1, gwas2, rsid_or_pos, region, plot = FALSE, population)
 }
 \arguments{
-\item{population}{}
+\item{gwas1}{Character. Path to the first GWAS VCF file or the IEU GWAS ID.}
+
+\item{gwas2}{Character. Path to the second GWAS VCF file or the IEU GWAS ID.}
+
+\item{rsid_or_pos}{Character. A valid rsID (e.g., "rs12345") or SNP position in the format "chromosome:position" (e.g., "1:123456").}
+
+\item{region}{Numeric. The region (in base pairs) to consider around the specified SNP. Region is usually 500kb-2Mb}
+
+\item{plot}{Logical. If \code{TRUE}, a co-localization plot is generated. Default is \code{FALSE}.}
+
+\item{population}{Character. Population information used for annotation in the plot.}
+}
+\value{
+A list containing the results of the co-localization analysis.
 }
 \description{
-Title
+This function performs co-localization analysis between two GWAS datasets, either from VCF files or using IEU GWAS IDs.
+}
+\examples{
+\dontrun{
+colocal("gwas1.vcf", "gwas2.vcf", "19:45410002", 50000, plot = TRUE, population = "EUR")
+colocal("ebi-a-GCST007515", "met-a-303", "rs769449", 100000, plot = FALSE, population = "EUR")
+}
 }

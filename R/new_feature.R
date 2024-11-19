@@ -68,19 +68,25 @@ download_ieuvcf <- function(IDlist, path, timeout=600) {
   assign("download_status", download_status, envir = .GlobalEnv)
 }
 
-#' Title
+#' Perform Co-localization Analysis
 #'
-#' @param gwas1
-#' @param gwas2
-#' @param rsid_or_pos
-#' @param region
-#' @param plot
-#' @param population
+#' This function performs co-localization analysis between two GWAS datasets, either from VCF files or using IEU GWAS IDs.
 #'
-#' @return
+#' @param gwas1 Character. Path to the first GWAS VCF file or the IEU GWAS ID.
+#' @param gwas2 Character. Path to the second GWAS VCF file or the IEU GWAS ID.
+#' @param rsid_or_pos Character. A valid rsID (e.g., "rs12345") or SNP position in the format "chromosome:position" (e.g., "1:123456").
+#' @param region Numeric. The region (in base pairs) to consider around the specified SNP. Region is usually 500kb-2Mb
+#' @param plot Logical. If `TRUE`, a co-localization plot is generated. Default is `FALSE`.
+#' @param population Character. Population information used for annotation in the plot.
+#'
+#' @return A list containing the results of the co-localization analysis.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' colocal("gwas1.vcf", "gwas2.vcf", "19:45410002", 50000, plot = TRUE, population = "EUR")
+#' colocal("ebi-a-GCST007515", "met-a-303", "rs769449", 100000, plot = FALSE, population = "EUR")
+#' }
 colocal <- function(gwas1,gwas2,rsid_or_pos,region,plot=FALSE,population){
   if (grepl("^rs[0-9]+$", rsid_or_pos)) {
     snppos <- variants_rsid(rsid_or_pos, opengwas_jwt = get_opengwas_jwt())
@@ -94,17 +100,21 @@ colocal <- function(gwas1,gwas2,rsid_or_pos,region,plot=FALSE,population){
     out <- gwasglue::gwasvcf_to_coloc(gwas1, gwas2, pos_region);
     print("Perform co-localization of vcf files")
   } else {
-    out <<- gwasglue::ieugwasr_to_coloc(id1=gwas1, id2=gwas2, chrompos=pos_region)
+    out <- gwasglue::ieugwasr_to_coloc(id1=gwas1, id2=gwas2, chrompos=pos_region)
     print("Perform co-localization of ieu GWAS ID")
   }
   res <- coloc::coloc.abf(out[[1]], out[[2]])
+  df1 <- data.frame('rsid'= out[[1]]$snp,out[[1]]$pvalues)
+  df2 <- data.frame('rsid'= out[[2]]$snp,out[[2]]$pvalues)
+  df <- merge(df1,df2,by = 'rsid')
+  df$row_sum <- rowSums(df[, 2:3])
+  res$topsnp <- df$rsid[which.min(df$row_sum)]
   if (plot==TRUE) {
     print(coloc_plot(out,gwas1name = basename(gwas1),gwas2name = basename(gwas2),population = population))
   }
   return(res)
 }
 
-#共定位画图
 #' Title
 #'
 #' @param out
@@ -112,7 +122,6 @@ colocal <- function(gwas1,gwas2,rsid_or_pos,region,plot=FALSE,population){
 #' @param gwas2name
 #'
 #' @return
-#' @export
 #'
 #' @examples
 coloc_plot <- function(out=out,gwas1name='gwas1',gwas2name='gwas2',population = 'EUR'){
@@ -127,19 +136,23 @@ coloc_plot <- function(out=out,gwas1name='gwas1',gwas2name='gwas2',population = 
 
 }
 
-#vcf finemap
-#' Title
+#' Perform Fine-mapping Using VCF
 #'
-#' @param region
-#' @param vcf
-#' @param bfile
-#' @param plink_bin
-#' @param threads
+#' This function extracts GWAS data from a VCF file, computes LD matrices using PLINK, and prepares data for fine-mapping analysis.
 #'
-#' @return
+#' @param region Character or vector. Genomic region(s) in the format "chromosome:start-end" to query from the VCF file.
+#' @param vcf Character. Path to the VCF file containing GWAS summary statistics.
+#' @param bfile Character. Path to the PLINK binary fileset (excluding extensions) used for LD calculation.
+#' @param plink_bin Character. Path to the PLINK executable. Default is provided by `genetics.binaRies::get_plink_binary()`.
+#' @param threads Numeric. Number of threads for parallel processing. Default is `1`.
+#'
+#' @return An object of class `FinemaprList`, containing fine-mapping results including LD matrices and Z-scores.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' vcf_finemap("1:100000-200000", vcf = "example.vcf", bfile = "bfile", threads = 4)
+#' }
 vcf_finemap <- function (region, vcf, bfile, plink_bin = genetics.binaRies::get_plink_binary(),
           threads = 1)
 {
@@ -163,18 +176,23 @@ vcf_finemap <- function (region, vcf, bfile, plink_bin = genetics.binaRies::get_
   return(out)
   }
 
-#ieufinemap
-#' Title
+#' Perform Fine-mapping Using IEU GWAS IDs
 #'
-#' @param region
-#' @param id
-#' @param bfile
-#' @param plink_bin
+#' This function retrieves GWAS data for a specified region from IEU OpenGWAS, calculates LD matrices using PLINK, and prepares data for fine-mapping analysis.
 #'
-#' @return
+#' @param region Character. Genomic region in the format "chromosome:start-end" to query.
+#' @param id Character or vector. IEU GWAS dataset ID(s) to query.
+#' @param bfile Character. Path to the PLINK binary fileset (excluding extensions) used for LD calculation.
+#' @param plink_bin Character. Path to the PLINK executable. Default is provided by `genetics.binaRies::get_plink_binary()`.
+#'
+#' @return An object of class `FinemaprList`, containing fine-mapping results including LD matrices and Z-scores for each dataset ID.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' ieu_finemap("1:100000-200000", id = "ieu-a-2", bfile = "example_bfile")
+#' }
+
 ieu_finemap <- function (region, id, bfile, plink_bin = genetics.binaRies::get_plink_binary())
 {
   id <- unique(id)
@@ -208,18 +226,24 @@ ieu_finemap <- function (region, id, bfile, plink_bin = genetics.binaRies::get_p
   return(out)
 }
 
-#findcausalSNP: multiple region, single GWAS
-#' Title
+#' Identify Causal SNPs in Genomic Regions
 #'
-#' @param regionlist
-#' @param bfile
-#' @param id_or_vcf 
-#' @param threshold 
+#' This function performs fine-mapping for a list of genomic regions using either VCF files or IEU GWAS IDs. It identifies potential causal SNPs based on a posterior inclusion probability (PIP) threshold.
 #'
-#' @return
+#' @param regionlist Character vector. A list of genomic regions in the format "chromosome:start-end".
+#' @param bfile Character. Path to the PLINK binary fileset (excluding extensions) used for LD calculation.
+#' @param id_or_vcf Character. Either the path to a VCF file or an IEU GWAS dataset ID.
+#' @param threshold Numeric. PIP threshold for identifying causal SNPs. Default is `0.8`.
+#'
+#' @return A data frame where each row corresponds to a region from `regionlist` and contains the identified causal SNPs for the corresponding dataset.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' region_list <- c("1:100000-200000", "2:300000-400000")
+#' casusalsnp <- findcausalSNP(region,'ebi-a-GCST007515',threshold = 0.8, bfile = 'bfile/EUR')
+#' }
+
 findcausalSNP <- function(regionlist,id_or_vcf,threshold = 0.8,bfile){
   finemap_df <- data.frame(matrix(ncol = 1, nrow = length(regionlist)))
   rownames(finemap_df) <- regionlist
@@ -262,17 +286,24 @@ findcausalSNP <- function(regionlist,id_or_vcf,threshold = 0.8,bfile){
   return(finemap_df)
 }
 
-#batch_coloc: single pheno1, multiple pheno2
-#' Title
+#' Perform Batch Co-localization Analysis
 #'
-#' @param pheno1
-#' @param pheno2
-#' @param region
+#' This function performs co-localization analysis for multiple phenotypes across a list of SNP positions and regions. Results are saved as CSV files in the specified output directory.
 #'
-#' @return
+#' @param pheno1 Character. Path to the first GWAS VCF file or IEU GWAS dataset ID.
+#' @param pheno2 Character vector. Paths to the second GWAS VCF files or IEU GWAS dataset IDs.
+#' @param rsid_or_pos Character vector. List of rsIDs (e.g., "rs12345") or SNP positions in the format "chromosome:position" (e.g., "1:123456").
+#' @param region Numeric. Number of base pairs to define the genomic region around each SNP.
+#' @param output_dir Character. Directory where the co-localization results will be saved as CSV files.
+#'
+#' @return This function does not return a value. It writes the co-localization results to CSV files in the specified output directory.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' rsids <- c("rs12345", "rs67890")
+#' batch_coloc('ebi-a-GCST007515', pheno2, rsid_or_pos = rsids,region = 500000,output_dir = 'results/') 
+#' }
 batch_coloc <- function(pheno1, pheno2, rsid_or_pos, region, output_dir) {
   for (snppos in rsid_or_pos) {
   csvname <- paste0(basename(pheno1),'_',snppos, '.csv')
@@ -295,6 +326,10 @@ batch_coloc <- function(pheno1, pheno2, rsid_or_pos, region, output_dir) {
       out <- gwasglue::ieugwasr_to_coloc(id1 = pheno1, id2 = pheno2[i], chrompos = pos_region)
     }
     res <- coloc::coloc.abf(out[[1]], out[[2]])
+    df1 <- data.frame('rsid'= out[[1]]$snp,out[[1]]$pvalues)
+    df2 <- data.frame('rsid'= out[[2]]$snp,out[[2]]$pvalues)
+    df <- merge(df1,df2,by = 'rsid')
+    res$topsnp <- df$rsid[which.min(rowSums(df[, 2:3]))]
     }, error = function(e) NA)
 
     if (isTRUE(is.na(res))) {
@@ -304,13 +339,14 @@ batch_coloc <- function(pheno1, pheno2, rsid_or_pos, region, output_dir) {
                             PP.H1.abf = NA,
                             PP.H2.abf = NA,
                             PP.H3.abf = NA,
-                            PP.H4.abf = NA)
+                            PP.H4.abf = NA,
+                            topsnp = NA)
     } else {
       new_res <- data.frame(pheno1 = pheno1,
                             pheno2 = pheno2[i],
-                            as.data.frame(t(res$summary)))
+                            as.data.frame(t(res$summary)),
+                            topsnp = res$topsnp)
     }
-    new_res
   }, mc.cores = detectCores() - 1)
 
   all_res <- bind_rows(res_list)
@@ -320,19 +356,24 @@ batch_coloc <- function(pheno1, pheno2, rsid_or_pos, region, output_dir) {
   }
 }
 
-#vcf_ldsc文件转换
-#' Title
+#' Convert VCF Files to LDSC Input Format
 #'
-#' @param vcf_file_path
-#' @param saveRDS
-#' @param output_dir
-#' @param num_cores
-#' @param plan
+#' This function processes a directory of VCF files, extracts summary statistics, and prepares data for LDSC (Linkage Disequilibrium Score Regression) analysis.
 #'
-#' @return
+#' @param vcf_file_path Character. Path to the directory containing compressed VCF files (`*.vcf.gz`).
+#' @param saveRDS Logical. If `TRUE`, saves the processed data as RDS files in the output directory. Default is `FALSE`.
+#' @param output_dir Character. Directory where processed files or RDS outputs will be saved.
+#' @param num_cores Numeric. Number of cores to use for parallel processing. Default is `2`.
+#' @param plan Character. Parallel processing strategy, e.g., `'multicore'` or `'sequential'`. Default is `'multicore'`.
+#'
+#' @return A list of processed data if `saveRDS` is `FALSE`. Otherwise, returns a vector of saved RDS file names.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' vcf2ldsc(vcf_file_path = "data/vcf_files", saveRDS = TRUE, output_dir = "output", num_cores = 4, plan = 'multicore')
+#' }
+
 vcf2ldsc <- function(vcf_file_path,saveRDS=FALSE,output_dir, num_cores = 2, plan='multicore'){
   # 创建输出目录（如果不存在）
   if (!dir.exists(output_dir)) {
@@ -402,31 +443,42 @@ vcf2ldsc <- function(vcf_file_path,saveRDS=FALSE,output_dir, num_cores = 2, plan
 
 
 
-#ldsc
-#' Title
+#' Perform Univariate LDSC Analysis
 #'
-#' @param data
-#' @param ancestry
+#' This function performs univariate Linkage Disequilibrium Score Regression (LDSC) analysis on a dataset to estimate heritability.
 #'
-#' @return
+#' @param data Character or list. Input data for LDSC analysis. Can be a path to a VCF file directory or a preprocessed list of summary statistics.
+#' @param ancestry Character. Population ancestry for LDSC reference data. Default is `"EUR"` (European ancestry).
+#'
+#' @return A list containing the heritability estimates and related statistics from the LDSC analysis.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' uni_ldsc(data = "data/vcf_files", ancestry = "EUR")
+#' }
 uni_ldsc <- function(data,ancestry="EUR"){
   require('ldscr')
   ldscdata <-  vcf2ldsc(data)
   h2_res <- ldsc_h2(munged_sumstats = ldscdata, ancestry = ancestry)
 }
 
-#' Title
+#' Perform Multivariate LDSC Analysis
 #'
-#' @param data
-#' @param ancestry
+#' This function performs multivariate Linkage Disequilibrium Score Regression (LDSC) to estimate genetic correlations between multiple datasets.
+#' **Note:** If the number of input files is large, memory usage may become excessive. In such cases, it is recommended to use `pair_ldsc` for pairwise analysis to avoid high memory consumption.
 #'
-#' @return
+#' @param data Character vector. A list of file paths to VCF files or preprocessed summary statistics.
+#' @param ancestry Character. Population ancestry for LDSC reference data. Default is `"EUR"` (European ancestry).
+#'
+#' @return A list containing genetic correlation estimates and related statistics from the multivariate LDSC analysis.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' vcf_files <- c("data/vcf_file1.vcf.gz", "data/vcf_file2.vcf.gz")
+#' mul_ldsc(data = vcf_files, ancestry = "EUR")
+#' }
 mul_ldsc <- function(data, ancestry="EUR"){
   datalist <- list()
   for (i in 1:length(data)) {
@@ -438,17 +490,26 @@ mul_ldsc <- function(data, ancestry="EUR"){
   rg_res <- ldsc_rg(munged_sumstats = datalist,ancestry = ancestry)
 }
 
-#' Title
+#' Perform Batch Heritability Analysis Using LDSC
 #'
-#' @param path
-#' @param ancestry
-#' @param para_plan
-#' @param num_cores
+#' This function calculates heritability estimates for all summary statistics files in a specified directory using LDSC. 
+#' Supports parallel processing to improve efficiency. If errors occur for certain files, NA values will be returned for those cases.
 #'
-#' @return
+#' @param path Character. Directory containing summary statistics files (`.rds` files processed by `vcf2ldsc`).
+#' @param ancestry Character. Population ancestry for LDSC reference data. Default is `"EUR"`.
+#' @param para_plan Character. Parallelization strategy for future backend (`"multicore"` by default).
+#' @param num_cores Integer. Number of cores to use for parallel processing. Default is `3`.
+#'
+#' @return A data frame containing heritability estimates and related statistics for each trait.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' batch_ldsc_h2(path = "data/sumstats",
+#'               ancestry = "EUR",
+#'               para_plan = "multicore",
+#'               num_cores = 4)
+#' }
 batch_ldsc_h2 <- function(path, ancestry = "EUR", para_plan='multicore',num_cores = 3){
   # 设置并行计划
   plan(para_plan, workers = num_cores)
@@ -482,19 +543,30 @@ batch_ldsc_h2 <- function(path, ancestry = "EUR", para_plan='multicore',num_core
   return(results_df)
 }
 
-#' Title
+#' Perform Pairwise LDSC Genetic Correlation Analysis
 #'
-#' @param path
-#' @param output_dir
-#' @param ancestry
-#' @param para_plan
-#' @param num_cores
-#' @param log_file
+#' This function calculates genetic correlations for all pairwise combinations of summary statistics files using LDSC. 
+#' It supports parallel processing to improve efficiency
 #'
-#' @return
+#' @param path Character. Directory containing summary statistics files (`.rds` files processed by `vcf2ldsc`).
+#' @param output_dir Character. Directory where the output CSV files will be saved.
+#' @param ancestry Character. Population ancestry for LDSC reference data. Default is `"EUR"`.
+#' @param para_plan Character. Parallelization strategy for future backend (`"multicore"` by default).
+#' @param num_cores Integer. Number of cores to use for parallel processing. Default is `3`.
+#' @param log_file Character. File path for logging errors or process information. Default is `"ldsc.log"`.
+#'
+#' @return A list of paths to the generated result CSV files.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' pair_ldsc(path = "data/sumstats",
+#'           output_dir = "results/pairwise_ldsc",
+#'           ancestry = "EUR",
+#'           para_plan = "multicore",
+#'           num_cores = 4,
+#'           log_file = "ldsc.log")
+#' }
 pair_ldsc <- function(path, output_dir, ancestry = "EUR", para_plan='multicore',num_cores = 3, log_file = "ldsc.log") {
   # 创建输出目录（如果不存在）
   if (!dir.exists(output_dir)) {
@@ -574,6 +646,11 @@ pair_ldsc <- function(path, output_dir, ancestry = "EUR", para_plan='multicore',
 #' @export
 #'
 #' @examples
+#' # Combine and filter CSV files in the specified directory
+#' combine_filter(path = "data/csv_files", traits = c("Trait1", "Trait2"), rg > 0.1)
+#'
+#' # Combine and filter a single CSV file
+#' combine_filter(path = "data/results.csv", traits = c("Trait1", "Trait2"), rg_p < 0.05)
 combine_filter <- function(path, traits = NULL, ...) {
   require(dplyr)
   # 获取所有 CSV 文件路径
@@ -613,14 +690,18 @@ combine_filter <- function(path, traits = NULL, ...) {
 }
 
 
-#' Title
+#' Plot Genetic Correlation Heatmap
 #'
-#' @param data
+#' This function generates a heatmap of genetic correlations (rg) between traits, with significance levels displayed in the upper triangle of the matrix. The diagonal is filled with `1` to represent perfect correlation with itself.
 #'
-#' @return
+#' @param data A data frame containing genetic correlation data, including columns for trait1, trait2, rg, and rg_p (p-values).(or directly generated by `combine_filter`)
+#'
+#' @return A heatmap plot of genetic correlations with significance levels.
 #' @export
 #'
 #' @examples
+#' # Generate a heatmap for genetic correlation data
+#' cor_plot(correlation_data)
 cor_plot <- function(data){
   # 准备相关性矩阵和显著性水平矩阵
   traits <- unique(c(data$trait1, data$trait2))

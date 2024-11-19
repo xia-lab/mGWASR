@@ -19,6 +19,8 @@ library(mGWASR)
 library(stringr)
 ```
 
+# Quick start
+
 ## get GWAS ID from ieu OpenGWAS database
 
 get GWAS ID from OpenGWAS.
@@ -65,15 +67,15 @@ pheno2 <- allGWAS[stringr::str_detect(allGWAS$id, "met-a|met-c"),'id']
 Search for co localization relationships between pheno1 and multiple pheno2 in regions centered around causal SNPs (which can be multiple)
 
 ```{r}
-batch_coloc('ebi-a-GCST007515', pheno2, rsid_or_pos = casusalsnp,region = 500000,output_dir = '') #region is usually 500kb-2Mb
+batch_coloc('ebi-a-GCST007515', pheno2, rsid_or_pos = c('rs174537','rs174547','rs1535'),region = 500000,output_dir = 'output_dir') #region is usually 500kb-2Mb
 ```
 
 Perform single co localization and plot
 
 ```{r}
-single_res <- colocal('ebi-a-GCST007515',pheno2[1],rsid_or_pos = casusalsnp[1],region = 500000,plot = T)
+single_res <- colocal('ebi-a-GCST007515',pheno2[1],rsid_or_pos = 'rs174537',region = 500000,plot = T)
 #Alternatively, you can use a VCF file
-#a <- colocal('pheno1_vcf_file','pheno2_vcf_file',rsid_or_pos = casusalsnp[1],region = 500000,plot = T)
+#single_res <- colocal('pheno1_vcf_file','pheno2_vcf_file',rsid_or_pos = casusalsnp[1],region = 500000,plot = T)
 ```
 
 ## Perform LDSC analysis in batches conveniently to estimate heritability and genetic correlation
@@ -126,3 +128,5 @@ Plot a correlation heatmap
 ```{r}
 plot <- cor_plot(com_res)
 ```
+
+# Case study of T2D
