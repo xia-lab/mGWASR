@@ -53,7 +53,7 @@ region <- '11:58780549-62223771'
 Searching for causal SNPs of a specific GWAS in regions of interest
 
 ```{r include=FALSE}
-casusalsnp <- findcausalSNP(region,'ebi-a-GCST007515',threshold = 0.8, bfile = 'bfile/EUR') #Please specify the bfile file path
+causalsnp <- findcausalSNP(region,'ebi-a-GCST007515',threshold = 0.8, bfile = 'bfile/EUR') #Please specify the bfile file path
 ```
 
 ## Find co-localization relationships in large batches
@@ -130,3 +130,51 @@ plot <- cor_plot(com_res)
 ```
 
 # Case study of T2D
+
+This section is used to reproduce the results of the case study of T2D in the article, which may take a long time.
+
+obtain the GWAS ID
+
+```{r}
+allGWAS_file <- system.file("extdata", "2024_allGWAS.csv", package = "mGWASR")
+allGWAS <- read.csv(allGWAS_file,row.names = 1)
+```
+
+Find causal SNPs through finemap
+
+```{r}
+region <- c("11:58780549-62223771", "11:116383348-117747110", "19:44744108-46102697", 
+  "11:59251804-62201641", "15:58441366-59694116", "1:54226262-56413117", 
+  "11:116383543-117901740", "16:55903774-57664330", "2:26894985-28598777", 
+  "8:19492840-20060856")
+```
+
+Searching for causal SNPs of a specific GWAS in regions of interest
+
+```{r include=FALSE}
+causalsnp <- findcausalSNP(region,'ebi-a-GCST007515',threshold = 0.8, bfile = 'bfile/EUR') #Please specify the bfile file path
+#Preserve unique SNPs
+causalsnp <- unlist(strsplit(na.omit(c(as.matrix(causalsnp))), ",\\s*"))
+```
+
+Find co-localization relationships in large batches
+
+```{r}
+pheno2 <- allGWAS[stringr::str_detect(allGWAS$id, "met-a|met-c"),'id']
+```
+
+Search for co localization relationships between pheno1 and multiple pheno2 in regions centered around causal SNPs (which can be multiple)
+
+```{r}
+batch_coloc('ebi-a-GCST007515', pheno2, rsid_or_pos = causalsnp,region = 500000,output_dir = 'output_dir') #region is usually 500kb-2Mb
+```
+
+Perform single co localization and plot
+
+```{r}
+single_res <- colocal('ebi-a-GCST007515','met-c-936',rsid_or_pos = 'rs769449',region = 500000,plot = T)
+#Alternatively, you can use a VCF file
+#single_res <- colocal('pheno1_vcf_file','pheno2_vcf_file',rsid_or_pos = casusalsnp[1],region = 500000,plot = T)
+```
+
+## 
