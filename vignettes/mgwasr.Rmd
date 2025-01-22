@@ -81,12 +81,15 @@ Sys.setenv(SQLITE_PATH = "~/Downloads/")
 
 #### Initiate the dataSet object for storing processed data
 
-mSetObj<-InitDataObjects("met2snp")
+mSet <- InitDataObjects("met2snp")
+
+
+
 SetAnalType("met2snp")
 SetVepOpt("myvariant")
 SetLDProxy("None")
 SetLDR2("0.8")
-PerformCmpdMapping(mSetObj, "D-Glucose
+mSet <- PerformCmpdMapping(mSet, "D-Glucose
 Pyruvic acid
 Betaine
 L-Serine
@@ -94,8 +97,8 @@ Trimethylamine
 Acetone
 Acetic acid
 2-Hydroxybutyric acid", "name", "blood", "all");
-CrossReferencing(mSetObj, "name");
-
+mSet <- CrossReferencing(mSet, "name");
+# working till here
 CreateMappingResultTable(mSetObj)
 SetMappingType();
 QueryMultiList();

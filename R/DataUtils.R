@@ -11,6 +11,8 @@
 # note, this is usually used at the end of a function
 # for local, return itself; for web, push to global environment
 .set.mSet <- function(mSetObj=NA){
+  mSetObj<<-mSetObj
+  save.image("setmet.RData")
   if(.on.public.web){
     mSet <<- mSetObj;
     return (1);
@@ -19,6 +21,7 @@
 }
 
 .get.mSet <- function(mSetObj=NA){
+  save.image("getmset.RData")
   if(.on.public.web){
     return(mSet)
   }else{
@@ -41,6 +44,8 @@
 #' @rdname InitDataObjects
 #' @export 
 InitDataObjects <- function(anal.type){
+  print(111111)
+  save.image(file = "InitDataObjects.RData")
   
   if(!.on.public.web){
     if(exists("mSet")){
@@ -454,14 +459,14 @@ AddErrMsg <- function(msg){
 #' @export 
 CrossReferencing <- function(mSetObj=NA, q.type, hmdb=T, pubchem=T, 
                              chebi=F, kegg=T, metlin=F, lipid=F){
-  # q.type<<-q.type;
-  # hmdb<<-hmdb;
-  # pubchem<<-pubchem;
-  # chebi<<-chebi;
-  # kegg<<-kegg;
-  # metlin<<-metlin;
-  # lipid<<-lipid;
-  # save.image("CrossReferencing.RData")
+   # q.type<<-q.type;
+   # hmdb<<-hmdb;
+   # pubchem<<-pubchem;
+   # chebi<<-chebi;
+   # kegg<<-kegg;
+   # metlin<<-metlin;
+   # lipid<<-lipid;
+   save.image("CrossReferencing.RData")
   
   mSetObj <- .get.mSet(mSetObj);
   
@@ -473,6 +478,7 @@ CrossReferencing <- function(mSetObj=NA, q.type, hmdb=T, pubchem=T,
   if(!exists("name.map", where = mSetObj)){
     mSetObj$name.map <- list();
   }
+  
   
   # distribute job
   mSetObj$dataSet$q.type <- q.type;
@@ -1235,6 +1241,14 @@ GetErrMsg<-function(){
 #' @rdname PerformCmpdMapping
 #' @export 
 PerformCmpdMapping <- function(mSetObj=NA, cmpdIDs, idType, tissueType, population){
+  print(cmpdIDs)
+  print(idType)
+  print(tissueType)
+  print(population)
+  cmpdIDs<<-cmpdIDs
+  tissueType<<-tissueType
+  population<<-population
+  save.image(file = "PerformCmpdMapping.RData")
   
   mSetObj <- .get.mSet(mSetObj);
   org <- "hsa";
@@ -1257,7 +1271,7 @@ PerformCmpdMapping <- function(mSetObj=NA, cmpdIDs, idType, tissueType, populati
   if(.on.public.web){
     return (nrow(cmpd.mat));
   }else{
-    return (paste("A total of",  nrow(cmpd.mat), "unique items were entered."))
+    return (.set.mSet(mSetObj));
   }
   # if(.on.public.web){
   #   .set.mSet(mSetObj);  
@@ -1283,6 +1297,7 @@ PerformCmpdMapping <- function(mSetObj=NA, cmpdIDs, idType, tissueType, populati
 #' @rdname SetMappingType
 #' @export 
 SetMappingType <- function(){
+  save.image("SetMappingType.RData")
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$mapType <- nms.vec;
   .set.mSet(mSetObj);
@@ -1332,7 +1347,7 @@ SetDbOpt <- function(){
 #' @rdname CreateMappingResultTable
 #' @export 
 CreateMappingResultTable <- function(mSetObj=NA) {
-  #save.image("CreateMappingResultTable.RData")
+  save.image("CreateMappingResultTable.RData")
   
   mSetObj <- .get.mSet(mSetObj);
   lipid <- mSetObj$lipid.feats;

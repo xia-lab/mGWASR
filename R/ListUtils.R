@@ -162,7 +162,7 @@ SetLDR2 <- function(opt){
 #' @rdname QueryMultiList
 #' @export 
 QueryMultiList <- function(){
-  #save.image("QueryMultiList.RData")
+  save.image("QueryMultiList.RData")
   mSetObj <- .get.mSet(mSetObj);
   .init.multilist();
       for(i in 1:length(mSetObj$dataSet$mapType)){

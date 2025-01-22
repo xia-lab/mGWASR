@@ -1639,7 +1639,7 @@ CreateGraph <- function(mSetObj=NA, net.type){
   net.type<<-net.type; # necessary for table stats
   mSetObj <- .get.mSet(mSetObj);
   query.type <- mSetObj$analSet$type;
-  #save.image("CreateGraph.RData")
+  save.image("CreateGraph.RData")
   if(.on.public.web){
     load_igraph()
   }
