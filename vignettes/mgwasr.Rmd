@@ -73,15 +73,33 @@ devtools::install_github("xia-lab/mGWASR", build = TRUE, build_opts = c("--no-re
 
 ```{r, eval=FALSE}
 library(mGWASR)
+#### Set up file path
+Sys.setenv(SQLITE_PATH = "/path/to/sqlite")
+Sys.setenv(PLINK_PATH = "/path/to/plink")
+Sys.setenv(PLINK_PATH = "~/Downloads/")
+Sys.setenv(SQLITE_PATH = "~/Downloads/")
 
 #### Initiate the dataSet object for storing processed data
-mSet<-InitDataObjects("met2snp")
 
-#### Set cmpdListFile as a file containing your compound list 
-cmpdListFile<-"replace_with_your_file_name.txt"
+mSetObj<-InitDataObjects("met2snp")
+SetAnalType("met2snp")
+SetVepOpt("myvariant")
+SetLDProxy("None")
+SetLDR2("0.8")
+PerformCmpdMapping(mSetObj, "D-Glucose
+Pyruvic acid
+Betaine
+L-Serine
+Trimethylamine
+Acetone
+Acetic acid
+2-Hydroxybutyric acid", "name", "blood", "all");
+CrossReferencing(mSetObj, "name");
 
-####  Read in the cmpdListFile, this will import a plain text file as single character string
-cmpdList<-readChar(cmpdListFile, file.info(cmpdListFile)$size)
+CreateMappingResultTable(mSetObj)
+SetMappingType();
+QueryMultiList();
+mSet<-CreateGraph(mSet, "metabolite")
 
 ```
 
