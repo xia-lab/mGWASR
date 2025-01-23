@@ -356,27 +356,21 @@ QueryMet2Dis <- function(db.path, q.vec, table.nm, col.nm){
 #' @export 
 Query.mGWASDB <- function(db.path, q.vec, table.nm, col.nm, biofluid="all", population="all", db.opt="kegg"){
   require('RSQLite');
-   #db.path<<-db.path;
-   #q.vec<<-q.vec;
-   #table.nm<<-table.nm;
-   #col.nm<<-col.nm;
-   #biofluid<<-biofluid;
-   #population<<-population;
-   #db.opt <<- db.opt;
-   #save.image("Query.mGWASDB.RData")
+   db.path<<-db.path;
+   q.vec<<-q.vec;
+   table.nm<<-table.nm;
+   col.nm<<-col.nm;
+   biofluid<<-biofluid;
+   population<<-population;
+   db.opt <<- db.opt;
+   save.image("Query.mGWASDB.RData")
 
   db.path <- paste0(db.path, ".sqlite");
 
   if(.on.public.web){
     mir.db <- dbConnect(SQLite(), db.path);
   }else{
-    msg <- paste("Downloading", db.path);
-    db.name <- gsub(sqlite.path, "", db.path);
-    if(!file.exists(db.name)){
-      print(msg);
-      download.file(db.path, db.name, mode = "wb");
-    }
-    mir.db <- dbConnect(SQLite(), db.name);
+    mir.db <- dbConnect(SQLite(), db.path);
   }
   query <- paste (shQuote(q.vec),collapse=",");
   if(table.nm=="snp_annot"){

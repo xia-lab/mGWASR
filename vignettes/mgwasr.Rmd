@@ -98,10 +98,12 @@ Acetone
 Acetic acid
 2-Hydroxybutyric acid", "name", "blood", "all");
 mSet <- CrossReferencing(mSet, "name");
-# working till here
-CreateMappingResultTable(mSetObj)
+mSet <- CreateMappingResultTable(mSetObj)
+nms.vec <- "met2snp"
 SetMappingType();
 QueryMultiList();
+# working till here
+
 mSet<-CreateGraph(mSet, "metabolite")
 
 ```
