@@ -170,24 +170,23 @@ Sensitivity analyses in Two-Sample MR are essential to validate the main finding
 
     The `mr_heterogeneity()` function returns a list with the following components:
 
-    - Q: The Cochran's Q statistic, which is a measure of the weighted sum of squared differences between individual SNP estimates and the overall MR estimate. A large Q statistic relative to its degrees of freedom suggests heterogeneity.
+    -   Q: The Cochran's Q statistic, which is a measure of the weighted sum of squared differences between individual SNP estimates and the overall MR estimate. A large Q statistic relative to its degrees of freedom suggests heterogeneity.
 
-    - Q_df: The degrees of freedom, which is equal to the number of SNPs minus 1.
+    -   Q_df: The degrees of freedom, which is equal to the number of SNPs minus 1.
 
-    - Q_pval: The p-value for the Q statistic. A low p-value (e.g., less than 0.05) suggests that there is significant heterogeneity.
+    -   Q_pval: The p-value for the Q statistic. A low p-value (e.g., less than 0.05) suggests that there is significant heterogeneity.
 
-- Pleiotropy test: This test is based on MR-Egger regression and specifically tests the null hypothesis that the intercept from the MR-Egger regression is equal to zero. If the null hypothesis is rejected, it suggests that there is horizontal pleiotropy, meaning that the genetic variants used as instrumental variables affect the outcome through pathways that are not mediated by the exposure.
+-   Pleiotropy test: This test is based on MR-Egger regression and specifically tests the null hypothesis that the intercept from the MR-Egger regression is equal to zero. If the null hypothesis is rejected, it suggests that there is horizontal pleiotropy, meaning that the genetic variants used as instrumental variables affect the outcome through pathways that are not mediated by the exposure.
 
     The `mr_pleiotropy_test()` function returns a list with the following components:
 
-    - pval: The p-value for the intercept from the MR-Egger regression. A low p-value (e.g., less than 0.05) suggests that there is significant horizontal pleiotropy.
+    -   pval: The p-value for the intercept from the MR-Egger regression. A low p-value (e.g., less than 0.05) suggests that there is significant horizontal pleiotropy.
 
-    - egger_intercept: The intercept from the MR-Egger regression, which provides a measure of the average pleiotropic effect across all genetic variants.
+    -   egger_intercept: The intercept from the MR-Egger regression, which provides a measure of the average pleiotropic effect across all genetic variants.
 
-- intercept_stderr: The standard error of the intercept.
+-   intercept_stderr: The standard error of the intercept.
 
 If the p-value (pval) is less than a certain significance level (e.g., 0.05), it suggests that there is significant pleiotropy. This means that at least some of the genetic variants used as instrumental variables are affecting the outcome through pathways that are not mediated by the exposure, which could bias the MR estimates.
-
 
 ## Interpret results
 
