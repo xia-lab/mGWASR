@@ -6,11 +6,13 @@
 
 # internal variables and functions not to be modified by users
 # This is only for web version 
-.on.public.web <- TRUE; # only TRUE when on mgwas web server
+.on.public.web <- FALSE; # only TRUE when on mgwas web server
 
 # note, this is usually used at the end of a function
 # for local, return itself; for web, push to global environment
 .set.mSet <- function(mSetObj=NA){
+  mSetObj<<-mSetObj
+  save.image("setmet.RData")
   if(.on.public.web){
     mSet <<- mSetObj;
     return (1);
@@ -19,6 +21,7 @@
 }
 
 .get.mSet <- function(mSetObj=NA){
+  save.image("getmset.RData")
   if(.on.public.web){
     return(mSet)
   }else{
@@ -41,6 +44,8 @@
 #' @rdname InitDataObjects
 #' @export 
 InitDataObjects <- function(anal.type){
+  print(111111)
+  save.image(file = "InitDataObjects.RData")
   
   if(!.on.public.web){
     if(exists("mSet")){
@@ -454,14 +459,14 @@ AddErrMsg <- function(msg){
 #' @export 
 CrossReferencing <- function(mSetObj=NA, q.type, hmdb=T, pubchem=T, 
                              chebi=F, kegg=T, metlin=F, lipid=F){
-  # q.type<<-q.type;
-  # hmdb<<-hmdb;
-  # pubchem<<-pubchem;
-  # chebi<<-chebi;
-  # kegg<<-kegg;
-  # metlin<<-metlin;
-  # lipid<<-lipid;
-  # save.image("CrossReferencing.RData")
+   # q.type<<-q.type;
+   # hmdb<<-hmdb;
+   # pubchem<<-pubchem;
+   # chebi<<-chebi;
+   # kegg<<-kegg;
+   # metlin<<-metlin;
+   # lipid<<-lipid;
+   save.image("CrossReferencing.RData")
   
   mSetObj <- .get.mSet(mSetObj);
   
@@ -473,6 +478,7 @@ CrossReferencing <- function(mSetObj=NA, q.type, hmdb=T, pubchem=T,
   if(!exists("name.map", where = mSetObj)){
     mSetObj$name.map <- list();
   }
+  
   
   # distribute job
   mSetObj$dataSet$q.type <- q.type;
@@ -1127,25 +1133,76 @@ ClearStrings<-function(query){
   # plotting required by all
   Cairo::CairoFonts(regular="Arial:style=Regular",bold="Arial:style=Bold",italic="Arial:style=Italic",bolditalic = "Arial:style=Bold Italic",symbol = "Symbol")
   
-  # sqlite db path for gene annotation
-  if(file.exists("/home/glassfish/sqlite/")){ #.on.public.web at dev
-    url.pre <<- "/home/glassfish/sqlite/";
-    plink.path <<- "/home/glassfish/plink/"
-  }else if(file.exists("/Users/xia/Dropbox/sqlite/")){ # xia local
-    url.pre <<- "/Users/xia/Dropbox/sqlite/";
-  }else if(file.exists("/Users/jeffxia/Dropbox/sqlite/")){ # xia local
-    url.pre <<- "/Users/jeffxia/Dropbox/sqlite/";
-  }else if(file.exists("/media/zzggyy/disk/sqlite/")){
-    url.pre <<-"/media/zzggyy/disk/sqlite/"; #zgy local)
-  }else if(file.exists("/home/zgy/sqlite/")){
-    url.pre <<-"/home/zgy/sqlite/"; #zgy local)
-    plink.path <<- "/home/zgy/plink/"
-  } else if(file.exists("/home/le/sqlite/mgwas/")){# le local
-    url.pre <<-"/home/le/sqlite/mgwas/oct_2021/";
-    plink.path <<- "'/media/le/Seagate Portable Drive/ieugwasr/'"
-  }else{
-    print("Unknown environment! No clue of the resource location!");
+  # # sqlite db path for gene annotation
+  # if(file.exists("/home/glassfish/sqlite/")){ #.on.public.web at dev
+  #   url.pre <<- "/home/glassfish/sqlite/";
+  #   plink.path <<- "/home/glassfish/plink/"
+  # }else if(file.exists("/Users/xia/Dropbox/sqlite/")){ # xia local
+  #   url.pre <<- "/Users/xia/Dropbox/sqlite/";
+  # }else if(file.exists("/Users/jeffxia/Dropbox/sqlite/")){ # xia local
+  #   url.pre <<- "/Users/jeffxia/Dropbox/sqlite/";
+  # }else if(file.exists("/media/zzggyy/disk/sqlite/")){
+  #   url.pre <<-"/media/zzggyy/disk/sqlite/"; #zgy local)
+  # }else if(file.exists("/home/zgy/sqlite/")){
+  #   url.pre <<-"/home/zgy/sqlite/"; #zgy local)
+  #   plink.path <<- "/home/zgy/plink/"
+  # } else if(file.exists("/home/le/sqlite/mgwas/")){# le local
+  #   url.pre <<-"/home/le/sqlite/mgwas/oct_2021/";
+  #   plink.path <<- "'/media/le/Seagate Portable Drive/ieugwasr/'"
+  # }else{
+  #   print("Unknown environment! No clue of the resource location!");
+  # }
+  # api.base <<- "http://api.xialab.ca"
+  
+  sqlite_path <- Sys.getenv("SQLITE_PATH", unset = NA)
+  plink_path <- Sys.getenv("PLINK_PATH", unset = NA)
+  sqlite_file <- "mgwas_202201.sqlite"
+  plink_file <- "plink"
+  api_base <- "https://www.xialab.ca/rest/sqlite"
+  plink_url <- "https://github.com/MRCIEU/genetics.binaRies/raw/refs/heads/master/binaries/Linux/plink"
+  
+  # Check for SQLite path
+  if (!is.na(sqlite_path) && dir.exists(sqlite_path)) {
+    url.pre <<- sqlite_path
+    
+    # Check if SQLite file exists; download if missing
+    sqlite_file_path <- file.path(sqlite_path, sqlite_file)
+    if (!file.exists(sqlite_file_path)) {
+      message("SQLite file not found in ", sqlite_path, ". Downloading...")
+      tryCatch({
+        download.file(file.path(api_base, sqlite_file), sqlite_file_path, mode = "wb")
+        message("SQLite file downloaded successfully: ", sqlite_file_path)
+      }, error = function(e) {
+        stop("SQLite file download failed: ", e$message)
+      })
+    } else {
+      message("SQLite file already exists: ", sqlite_file_path)
+    }
+  } else {
+    stop("Unknown environment! Please set SQLITE_PATH environment variable.")
   }
+  
+  # Check for PLINK path
+  if (!is.na(plink_path) && dir.exists(plink_path)) {
+    plink.path <<- plink_path
+    
+    # Check if PLINK file exists; download if missing
+    plink_file_path <- file.path(plink_path, plink_file)
+    if (!file.exists(plink_file_path)) {
+      message("PLINK file not found in ", plink_path, ". Downloading...")
+      tryCatch({
+        download.file(plink_url, plink_file_path, mode = "wb")
+        Sys.chmod(plink_file_path, "0755")  # Ensure it is executable
+        message("PLINK file downloaded and made executable: ", plink_file_path)
+      }, error = function(e) {
+        stop("PLINK file download failed: ", e$message)
+      })
+    } else {
+      message("PLINK file already exists: ", plink_file_path)
+    }
+  } else {
+    stop("Unknown environment! Please set PLINK_PATH environment variable.")
+  }  
   api.base <<- "http://api.xialab.ca"
 }
 
@@ -1184,6 +1241,14 @@ GetErrMsg<-function(){
 #' @rdname PerformCmpdMapping
 #' @export 
 PerformCmpdMapping <- function(mSetObj=NA, cmpdIDs, idType, tissueType, population){
+  print(cmpdIDs)
+  print(idType)
+  print(tissueType)
+  print(population)
+  cmpdIDs<<-cmpdIDs
+  tissueType<<-tissueType
+  population<<-population
+  save.image(file = "PerformCmpdMapping.RData")
   
   mSetObj <- .get.mSet(mSetObj);
   org <- "hsa";
@@ -1206,7 +1271,7 @@ PerformCmpdMapping <- function(mSetObj=NA, cmpdIDs, idType, tissueType, populati
   if(.on.public.web){
     return (nrow(cmpd.mat));
   }else{
-    return (paste("A total of",  nrow(cmpd.mat), "unique items were entered."))
+    return (.set.mSet(mSetObj));
   }
   # if(.on.public.web){
   #   .set.mSet(mSetObj);  
@@ -1232,6 +1297,7 @@ PerformCmpdMapping <- function(mSetObj=NA, cmpdIDs, idType, tissueType, populati
 #' @rdname SetMappingType
 #' @export 
 SetMappingType <- function(){
+  save.image("SetMappingType.RData")
   mSetObj <- .get.mSet(mSetObj);
   mSetObj$dataSet$mapType <- nms.vec;
   .set.mSet(mSetObj);
@@ -1281,7 +1347,7 @@ SetDbOpt <- function(){
 #' @rdname CreateMappingResultTable
 #' @export 
 CreateMappingResultTable <- function(mSetObj=NA) {
-  #save.image("CreateMappingResultTable.RData")
+  save.image("CreateMappingResultTable.RData")
   
   mSetObj <- .get.mSet(mSetObj);
   lipid <- mSetObj$lipid.feats;
