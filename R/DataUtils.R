@@ -1133,29 +1133,6 @@ ClearStrings<-function(query){
   # plotting required by all
   Cairo::CairoFonts(regular="Arial:style=Regular",bold="Arial:style=Bold",italic="Arial:style=Italic",bolditalic = "Arial:style=Bold Italic",symbol = "Symbol")
   
-<<<<<<< HEAD
-  # sqlite db path for gene annotation
-  if(file.exists("/home/glassfish/sqlite/")){ #.on.public.web at dev
-    url.pre <<- "/home/glassfish/sqlite/";
-    plink.path <<- "/home/glassfish/plink/"
-  }else if(file.exists("/Users/xia/Dropbox/sqlite/")){ # xia local
-    url.pre <<- "/Users/xia/Dropbox/sqlite/";
-  }else if(file.exists("/Users/jeffxia/Dropbox/sqlite/")){ # xia local
-    url.pre <<- "/Users/jeffxia/Dropbox/sqlite/";
-  }else if(file.exists("/media/zzggyy/disk/sqlite/")){
-    url.pre <<-"/media/zzggyy/disk/sqlite/"; #zgy local)
-  }else if(file.exists("/home/zgy/sqlite/")){
-    url.pre <<-"/home/zgy/sqlite/"; #zgy local)
-    plink.path <<- "/home/zgy/plink/"
-  } else if(file.exists("/home/le/sqlite/mgwas/")){# le local
-    url.pre <<-"/home/le/sqlite/mgwas/oct_2021/";
-    plink.path <<- "'/media/le/Seagate Portable Drive/ieugwasr/'"
-  } else if(file.exists("/Users/zhangyi/Yfile/学习/Ph.D/mcgill联培/mGWAS_depend/bfile")){# yi local
-    url.pre <<-"/Users/zhangyi/Yfile/学习/Ph.D/mcgill联培/mGWAS_depend/";
-    plink.path <<- "/Users/zhangyi/Yfile/学习/Ph.D/mcgill联培/mGWAS_depend/bfile/"
-  } else{
-    print("Unknown environment! No clue of the resource location!");
-=======
   # # sqlite db path for gene annotation
   # if(file.exists("/home/glassfish/sqlite/")){ #.on.public.web at dev
   #   url.pre <<- "/home/glassfish/sqlite/";
@@ -1203,7 +1180,6 @@ ClearStrings<-function(query){
     }
   } else {
     stop("Unknown environment! Please set SQLITE_PATH environment variable.")
->>>>>>> c2562792335ff75b57e8271a854d9c76e811971e
   }
   
   # Check for PLINK path
