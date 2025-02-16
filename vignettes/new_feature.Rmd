@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, message=FALSE}
 library(mGWASR)
 library(stringr)
 ```
@@ -23,99 +23,106 @@ library(stringr)
 
 ## get GWAS ID from ieu OpenGWAS database
 
-get GWAS ID from OpenGWAS.
+Step 1: Obtain OpenGWAS API TokenBefore you can access the OpenGWAS database, you need to get an API token. This token is required for authentication and allows you to query the database. You can obtain the token from <https://api.opengwas.io/>.
 
-Please get OpenGWAS API token from <https://api.opengwas.io/>
-
-```{r}
-Sys.setenv(OPENGWAS_JWT="your API token")
+```{r, eval=FALSE}
+Sys.setenv(OPENGWAS_JWT="your API token") # Replace "your API token" with the actual token you obtained
 ```
 
-```{r}
-allGWAS <- ieugwasr::gwasinfo()
+Step 2: Retrieve GWAS InformationOnce you have the API token, you can use the `ieugwasr` package to fetch GWAS information. This package provides functions to interact with the OpenGWAS database.
+
+```{r, eval=FALSE}
+allGWAS <- ieugwasr::gwasinfo() # This function retrieves a list of all available GWAS studies from the OpenGWAS database
 ```
 
-Alternatively, obtain the GWAS ID from the downloaded table in this R package.
+Alternatively, you can load a pre-downloaded table of GWAS IDs from a file included in the R package:
 
-```{r}
-allGWAS_file <- system.file("extdata", "2024_allGWAS.csv", package = "mGWASR")
-allGWAS <- read.csv(allGWAS_file,row.names = 1)
+```{r, eval=FALSE}
+allGWAS_file <- system.file("extdata", "2024_allGWAS.csv", package = "mGWASR") # Locate the file within the package
+allGWAS <- read.csv(allGWAS_file,row.names = 1) # Read the CSV file into a data frame
 ```
+
+Explanation: The allGWAS data frame contains information about all GWAS studies available in the OpenGWAS database, including their IDs, traits, and other metadata.
 
 ## Find causal SNPs through finemap
+The `findcausalSNP` function uses the "Sum of Single Effects" (SuSiE) model to identify causal SNPs based on two criteria:
+1. PIP (Posterior Inclusion Probability): The probability that each SNP is included in the model. SNPs with PIP > 0.8 (default) are considered candidate causal SNPs.
+2. Credible Sets (CSs): A set of SNPs whose cumulative PIP reaches a certain confidence level (default 95%).
 
-Select the chromosome regions of interest
+Step 1: Select the Region of Interest
 
-```{r}
-region <- '11:58780549-62223771'
+To identify causal SNPs, you need to specify a genomic region of interest. This region should be based on prior knowledge or hypotheses about where causal variants might be located.
+
+```{r, eval=FALSE}
+region <- '11:58780549-62223771' # Example region on chromosome 11
 ```
 
-Searching for causal SNPs of a specific GWAS in regions of interest
+Step 2: Search for Causal SNPs
 
-```{r include=FALSE}
-casusalsnp <- findcausalSNP(region,'ebi-a-GCST007515',threshold = 0.8, bfile = 'bfile/EUR') #Please specify the bfile file path
+Use the `findcausalSNP` function to search for causal SNPs within the specified region for a specific GWAS study. You need to provide the GWAS ID, the region, and the path to the binary file (`bfile`) containing the genotype data.
+
+```{r include=FALSE, eval=FALSE}
+causalsnp <- findcausalSNP(region,'ebi-a-GCST007515',threshold = 0.8, bfile = 'bfile/EUR') #Please specify the bfile file path
 ```
+Explanation: This function returns a list of SNPs that both meet the threshold above the PIP threshold and are members of CSs.
 
 ## Find co-localization relationships in large batches
-
-Extract the GWAS ID of the metabolites
-
-```{r}
-pheno2 <- allGWAS[stringr::str_detect(allGWAS$id, "met-a|met-c"),'id']
+Step 1: Extract GWAS IDs of Interest
+You may want to investigate co-localization relationships between a specific phenotype and multiple other phenotypes. First, extract the GWAS IDs of the phenotypes you are interested in.
+```{r, eval=FALSE}
+pheno2 <- allGWAS[stringr::str_detect(allGWAS$id, "met-a|met-c"),'id'] # Extract IDs of metabolite-related phenotypes
 ```
+Step 2: Search for Co-localization Relationships
+Use the `batch_coloc` function to search for co-localization relationships between the primary phenotype and multiple secondary phenotypes. Specify the SNPs or chr:pos and the region around them.
 
-Search for co localization relationships between pheno1 and multiple pheno2 in regions centered around causal SNPs (which can be multiple)
-
-```{r}
+```{r, eval=FALSE}
 batch_coloc('ebi-a-GCST007515', pheno2, rsid_or_pos = c('rs174537','rs174547','rs1535'),region = 500000,output_dir = 'output_dir') #region is usually 500kb-2Mb
 ```
+Explanation: Co-localization analysis helps determine whether the same genetic variant influences multiple traits. The `region`  parameter defines the genomic window around the  SNPs to search for co-localization. A typical region is 500kb to 2Mb.
 
-Perform single co localization and plot
-
-```{r}
+Alternatively, you can perform single co-localization and plot the results for visualization. This is useful for detailed examination of specific co-localization relationships.
+```{r, eval=FALSE}
 single_res <- colocal('ebi-a-GCST007515',pheno2[1],rsid_or_pos = 'rs174537',region = 500000,plot = T)
 #Alternatively, you can use a VCF file
 #single_res <- colocal('pheno1_vcf_file','pheno2_vcf_file',rsid_or_pos = casusalsnp[1],region = 500000,plot = T)
 ```
 
 ## Perform LDSC analysis in batches conveniently to estimate heritability and genetic correlation
+Step 1: Download GWAS Sumstats
+To perform LDSC (Linkage Disequilibrium Score) analysis, you need GWAS summary statistics in the standard VCF format. Use the "download_ieuvcf" function to download the required files, or you can prepare them yourself.
 
-Download GWAS sumstats of interest
-
-```{r}
+```{r, eval=FALSE}
 phenos <- allGWAS %>%
   filter(grepl("Type 2 diabetes", trait, ignore.case = TRUE) & population == "European")
-download_ieuvcf(phenos$id,'T2D_EUR_vcf/')
+download_ieuvcf(phenos$id,'T2D_EUR_vcf/') # Download VCF files for these studies
 ```
 
-Filter successful downloads
-
-```{r}
+Step 2: Filter Successful Downloads
+Check which files were successfully downloaded and filter out any failed downloads.
+```{r, eval=FALSE}
 phenos <- download_status %>%
   filter(status == "Success")
 ```
 
-Convert VCF files to intermediate RDS files required for LDSC analysis
-
-```{r}
+Step 3: Convert VCF Files to LDSC required Format
+Convert the downloaded VCF files to the intermediate RDS format required for LDSC analysis.
+```{r, eval=FALSE}
 ldsc_file <- vcf2ldsc('T2D_EUR_vcf/',saveRDS = T,output_dir = 'T2D_EUR_vcf_rds',num_cores = 5)
 ```
-
-Batch calculate the heritability of each phenotype
-
-```{r}
+Step 4: Batch Calculate Heritability
+Use the `batch_ldsc_h2` function to estimate the heritability of each phenotype.
+```{r, eval=FALSE}
 ldsc_h2 <- batch_ldsc_h2('T2D_EUR_vcf_rds/',num_cores = 8)
 ```
-
-Pair all objects pairwise and calculate the genetic correlation between every two
-
-```{r}
+Step 5: Calculate Genetic Correlation
+Pair all phenotypes and calculate the genetic correlation between each pair.
+```{r, eval=FALSE}
 ldsc_res <- pair_ldsc('T2D_EUR_vcf_rds/',output_dir = 'T2D_EUR_res/',para_plan  = 'multicore',num_cores = 8)
 ```
 
-Merge genetic correlation results and filter them based on conditions to create a table for drawing
-
-```{r}
+Step 6: Merge and Filter Results
+Combine the results and filter them based on specific conditions to create a table for visualization.
+```{r, eval=FALSE}
 com_res <- combine_filter('T2D_EUR_res/',traits = c('ebi-a-GCST005047.vcf',
   'ebi-a-GCST005413.vcf',
   'ieu-a-1090.vcf',
@@ -123,10 +130,56 @@ com_res <- combine_filter('T2D_EUR_res/',traits = c('ebi-a-GCST005047.vcf',
   'ebi-a-GCST007517.vcf'))
 ```
 
-Plot a correlation heatmap
-
-```{r}
+Step 7: Plot Correlation Heatmap
+Visualize the genetic correlation results using a heatmap.
+```{r, eval=FALSE}
 plot <- cor_plot(com_res)
 ```
+Explanation: The LDSC analysis function of this package provides an interface for calculating the heritability and genetic correlation of standardized vcf sumstats.
 
 # Case study of T2D
+
+This section is used to reproduce the results of the case study of T2D in the article, which may take a long time.
+
+Step 1: Obtain GWAS IDLoad the GWAS information from the pre-downloaded file.
+```{r, eval=FALSE}
+allGWAS_file <- system.file("extdata", "2024_allGWAS.csv", package = "mGWASR")
+allGWAS <- read.csv(allGWAS_file,row.names = 1)
+```
+Step 2: Find Causal SNPs through Fine-Mapping
+Specify multiple genomic regions of interest.  Here are the top 10 regions related to metabolites after data mining in the article.
+
+```{r, eval=FALSE}
+region <- c("11:58780549-62223771", "11:116383348-117747110", "19:44744108-46102697", 
+  "11:59251804-62201641", "15:58441366-59694116", "1:54226262-56413117", 
+  "11:116383543-117901740", "16:55903774-57664330", "2:26894985-28598777", 
+  "8:19492840-20060856")
+```
+Searching for causal SNPs of a specific GWAS (Type 2 diabetes, ebi-a-GCST007515) in regions of interest.
+
+```{r include=FALSE, eval=FALSE}
+causalsnp <- findcausalSNP(region,'ebi-a-GCST007515',threshold = 0.8, bfile = 'bfile/EUR') #Please specify the bfile file path
+#Preserve unique SNPs
+causalsnp <- unlist(strsplit(na.omit(c(as.matrix(causalsnp))), ",\\s*"))
+```
+
+Step 3: Find Co-localization Relationships in Large Batches
+Extract GWAS IDs starting with met-a or met-c (metabolite GWAS provided by the IEU) that are to be compared with T2D.
+```{r, eval=FALSE}
+pheno2 <- allGWAS[stringr::str_detect(allGWAS$id, "met-a|met-c"),'id']
+```
+
+Step 5: Search for Co-localization Relationships
+Use the `batch_coloc` function to search for co-localization relationships between T2D and hundreds of metabolites.
+```{r, eval=FALSE}
+batch_coloc('ebi-a-GCST007515', pheno2, rsid_or_pos = causalsnp,region = 500000,output_dir = 'output_dir') #Region specified as 500kb
+```
+
+Step 6: Perform Single Co-localization and Plot
+Individually examine and visualize results between Type 2 diabetes (ebi-a-GCST007515) and Total fatty acids (met-c-936).
+```{r, eval=FALSE}
+single_res <- colocal('ebi-a-GCST007515','met-c-936',rsid_or_pos = 'rs769449',region = 500000,plot = T)
+#Alternatively, you can use a VCF file
+#single_res <- colocal('pheno1_vcf_file','pheno2_vcf_file',rsid_or_pos = casusalsnp[1],region = 500000,plot = T)
+```
+

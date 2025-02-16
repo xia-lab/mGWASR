@@ -1,7 +1,12 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# mGWASR <img src="man/figures/mgwas_logo.png" align="right" alt="" width="120" />
+# mGWASR <img src="man/figures/mgwas_logo.png" align="right" width="120"/>
 
 #### A companion R package for the mGWAS-Explorer web server
 
@@ -26,12 +31,23 @@ that need to be installed prior to their own successful installation.
 
 ``` r
 install.packages("pacman")
+install.packages("devtools")
 
 library(pacman)
+library(devtools)
 
 # need to update the depdencies
-
-pacman::p_load(RSQLite, igraph,  BiocParallel,  pryr,  httr,  reshape,  ggplot2,  RJSONIO,  RCurl,  XML,  ggforce,  graphlayouts,  compiler,  dplyr,  RColorBrewer,  Cairo,  plyr,  qs,  rjson,  TwoSampleMR)
+pacman::p_load(RSQLite, igraph, BiocManager, BiocParallel,  pryr,  httr,  reshape,  ggplot2,  RJSONIO,  RCurl,  XML,  ggforce,  graphlayouts,  compiler,  dplyr,  RColorBrewer,  Cairo,  plyr,  qs,  rjson,  TwoSampleMR,
+               mygene, myvariant, RMySQL, MendelianRandomization)
+BiocManager::install(c("VariantAnnotation", "genetics.binaRies", "gwasvcf", "gwasglue"))
+devtools::install_github(c(
+  "mglev1n/ldscr",
+  "boxiangliu/locuscomparer",
+  "explodecomputer/plinkbinr",
+  "MRCIEU/genetics.binaRies",
+  "mrcieu/gwasvcf",
+  "mrcieu/gwasglue"
+))
 ```
 
 ### Step 2. Install the package
@@ -47,14 +63,10 @@ Install the package directly from github using the *devtools* package.
 Open R and enter:
 
 ``` r
-# Step 1: Install devtools
-install.packages("devtools")
-library(devtools)
-
-# Step 2: Install mGWASR WITHOUT documentation
+# Install mGWASR WITHOUT documentation
 devtools::install_github("xia-lab/mGWASR", build = TRUE, build_opts = c("--no-resave-data", "--no-manual", "--no-build-vignettes"), force = TRUE)
 
-# Step 2: Install mGWASR WITH documentation
+# Install mGWASR WITH documentation
 devtools::install_github("xia-lab/mGWASR", build = TRUE, build_opts = c("--no-resave-data", "--no-manual"), build_vignettes = TRUE, force = TRUE)
 ```
 
@@ -96,4 +108,4 @@ Metabolites, 12(6), 526. <https://doi.org/10.3390/metabo12060526>
 ## Bugs or feature requests
 
 To inform us of any bugs or requests, please open a new issue or send an
-email to le.chang @ mail.mcgill.ca
+email to le.chang \@ mail.mcgill.ca
