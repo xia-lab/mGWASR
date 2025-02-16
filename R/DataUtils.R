@@ -1143,7 +1143,10 @@ ClearStrings<-function(query){
   } else if(file.exists("/home/le/sqlite/mgwas/")){# le local
     url.pre <<-"/home/le/sqlite/mgwas/oct_2021/";
     plink.path <<- "'/media/le/Seagate Portable Drive/ieugwasr/'"
-  }else{
+  } else if(file.exists("/Users/zhangyi/Yfile/学习/Ph.D/mcgill联培/mGWAS_depend/bfile")){# yi local
+    url.pre <<-"/Users/zhangyi/Yfile/学习/Ph.D/mcgill联培/mGWAS_depend/";
+    plink.path <<- "/Users/zhangyi/Yfile/学习/Ph.D/mcgill联培/mGWAS_depend/bfile/"
+  } else{
     print("Unknown environment! No clue of the resource location!");
   }
   api.base <<- "http://api.xialab.ca"
