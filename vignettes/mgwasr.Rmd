@@ -29,11 +29,27 @@ Following installation and loading of *mGWASR*, users will be able to reproduce 
 To use mGWASR , first install all package dependencies. Ensure that you are able to download packages from bioconductor. To install package dependencies, use the pacman R package (for those with \>R 3.5.1). Note that some of these packages may require additional library dependencies that need to be installed prior to their own successful installation.
 
 ```{r, eval=FALSE}
-install.packages("pacman")
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
+}
+if (!requireNamespace("devtools", quietly = TRUE)) {
+  install.packages("devtools")
+}
 
 library(pacman)
+library(devtools)
 
-pacman::p_load(RSQLite, igraph,  BiocParallel,  pryr,  httr,  reshape,  ggplot2,  RJSONIO,  RCurl,  XML,  ggforce,  graphlayouts,  compiler,  dplyr,  RColorBrewer,  Cairo,  plyr,  qs,  rjson,  TwoSampleMR)
+# need to update the depdencies
+pacman::p_load(RSQLite, igraph, BiocManager, BiocParallel,  pryr,  httr,  reshape,  ggplot2,  RJSONIO,  RCurl,  XML,  ggforce,  graphlayouts,  compiler,  dplyr,  RColorBrewer,  Cairo,  plyr,  qs,  rjson,  TwoSampleMR,
+               mygene, myvariant, RMySQL, MendelianRandomization, VariantAnnotation)
+devtools::install_github(c(
+  "mglev1n/ldscr",
+  "boxiangliu/locuscomparer",
+  "explodecomputer/plinkbinr",
+  "MRCIEU/genetics.binaRies",
+  "mrcieu/gwasvcf",
+  "mrcieu/gwasglue"
+))
 
 ```
 
@@ -44,17 +60,11 @@ mGWASR is freely available from GitHub. The package documentation, including the
 Install the package directly from github using the *devtools* package. Open R and enter:
 
 ```{r, eval=FALSE}
-
-# Step 1: Install devtools
-install.packages("devtools")
-library(devtools)
-
-# Step 2: Install mGWASR WITHOUT documentation
+# Install mGWASR WITHOUT documentation
 devtools::install_github("xia-lab/mGWASR", build = TRUE, build_opts = c("--no-resave-data", "--no-manual", "--no-build-vignettes"), force = TRUE)
 
-# Step 2: Install mGWASR WITH documentation
+# Install mGWASR WITH documentation
 devtools::install_github("xia-lab/mGWASR", build = TRUE, build_opts = c("--no-resave-data", "--no-manual"), build_vignettes = TRUE, force = TRUE)
-
 ```
 
 # Tips for using the mGWASR package
@@ -256,13 +266,15 @@ Here's how you interpret a funnel plot in MR analysis:
 
 ## get GWAS ID from ieu OpenGWAS database
 
-Step 1: Obtain OpenGWAS API TokenBefore you can access the OpenGWAS database, you need to get an API token. This token is required for authentication and allows you to query the database. You can obtain the token from <https://api.opengwas.io/>.
+Step 1: Obtain OpenGWAS API Token
+Before you can access the OpenGWAS database, you need to get an API token. This token is required for authentication and allows you to query the database. You can obtain the token from <https://api.opengwas.io/>.
 
 ```{r, eval=FALSE}
 Sys.setenv(OPENGWAS_JWT="your API token") # Replace "your API token" with the actual token you obtained
 ```
 
-Step 2: Retrieve GWAS InformationOnce you have the API token, you can use the `ieugwasr` package to fetch GWAS information. This package provides functions to interact with the OpenGWAS database.
+Step 2: Retrieve GWAS Information
+Once you have the API token, you can use the `ieugwasr` package to fetch GWAS information. This package provides functions to interact with the OpenGWAS database.
 
 ```{r, eval=FALSE}
 allGWAS <- ieugwasr::gwasinfo() # This function retrieves a list of all available GWAS studies from the OpenGWAS database
@@ -370,7 +382,7 @@ plot <- cor_plot(com_res)
 ```
 Explanation: The LDSC analysis function of this package provides an interface for calculating the heritability and genetic correlation of standardized vcf sumstats.
 
-# Case study of T2D
+## Reproduce the results of the T2D case study
 
 This section is used to reproduce the results of the case study of T2D in the article, which may take a long time.
 
