@@ -77,23 +77,78 @@ devtools::install_github("xia-lab/mGWASR", build = TRUE, build_opts = c("--no-re
 
 4)  Each main function in mGWASR is documented. Use the *?Function* format to open its documentation. For instance, use `?mGWASR::QueryExposure` to find out more about this function.
 
+# Download SQLite database and PLINK binary file
+
+The mGWASR package requires access to a SQLite database containing curated mGWAS information and relies on PLINK for genetic analysis. 
+
+1. **SQLite Database**: Contains 313,720 significant SNP-metabolite associations from 65 metabolite GWAS studies
+2. **PLINK**: Required for genetic analysis operations
+
+### Option 1: Automatic Setup (Recommended)
+
+The easiest way to use mGWASR is to set environment variables that allow automatic downloading and configuration of dependencies.
+
+```r
+# Load the library
+library(mGWASR)
+#### Set up file path
+Sys.setenv(SQLITE_PATH = "/path/to/sqlite")
+Sys.setenv(PLINK_PATH = "/path/to/plink")
+
+# Initiate the dataSet object for storing processed data
+
+mSet <- InitDataObjects("met2snp")
+
+```
+
+When you run `InitDataObjects`, mGWASR will:
+1. Check if the SQLite database exists in the specified directory
+2. If not found, automatically download it (~200MB)
+3. Check if PLINK exists in the specified directory
+4. If not found, automatically download and make it executable
+
+### Option 2: Manual Setup
+
+If you prefer to manage dependencies manually:
+
+1. Download the SQLite database:
+   ```r
+   # Create a directory to store the database
+   dir.create("~/mgwas_data", showWarnings = FALSE, recursive = TRUE)
+   
+   # Download the database file
+   download.file(
+     "https://www.xialab.ca/rest/sqlite/mgwas_202201.sqlite", 
+     "~/mgwas_data/mgwas_202201.sqlite", 
+     mode = "wb"
+   )
+   ```
+
+2. Download PLINK:
+   ```r
+   # Download PLINK
+   download.file(
+     "https://github.com/MRCIEU/genetics.binaRies/raw/refs/heads/master/binaries/Linux/plink",
+     "~/mgwas_data/plink", 
+     mode = "wb"
+   )
+   
+   # Make PLINK executable
+   Sys.chmod("~/mgwas_data/plink", "0755")
+   ```
+
+3. Set environment variables and load the library:
+   ```r
+   Sys.setenv(SQLITE_PATH = "~/mgwas_data")
+   Sys.setenv(PLINK_PATH = "~/mgwas_data")
+   
+   ```
+
 # Obtain statistical associations and biological mappings
 
 ## Starting from a list of metabolites
 
 ```{r, eval=FALSE}
-library(mGWASR)
-#### Set up file path
-Sys.setenv(SQLITE_PATH = "/path/to/sqlite")
-Sys.setenv(PLINK_PATH = "/path/to/plink")
-Sys.setenv(PLINK_PATH = "~/Downloads/")
-Sys.setenv(SQLITE_PATH = "~/Downloads/")
-
-#### Initiate the dataSet object for storing processed data
-
-mSet <- InitDataObjects("met2snp")
-
-
 
 SetAnalType("met2snp")
 SetVepOpt("myvariant")

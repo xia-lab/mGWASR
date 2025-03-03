@@ -1132,28 +1132,7 @@ ClearStrings<-function(query){
   
   # plotting required by all
   Cairo::CairoFonts(regular="Arial:style=Regular",bold="Arial:style=Bold",italic="Arial:style=Italic",bolditalic = "Arial:style=Bold Italic",symbol = "Symbol")
-  
-  # # sqlite db path for gene annotation
-  # if(file.exists("/home/glassfish/sqlite/")){ #.on.public.web at dev
-  #   url.pre <<- "/home/glassfish/sqlite/";
-  #   plink.path <<- "/home/glassfish/plink/"
-  # }else if(file.exists("/Users/xia/Dropbox/sqlite/")){ # xia local
-  #   url.pre <<- "/Users/xia/Dropbox/sqlite/";
-  # }else if(file.exists("/Users/jeffxia/Dropbox/sqlite/")){ # xia local
-  #   url.pre <<- "/Users/jeffxia/Dropbox/sqlite/";
-  # }else if(file.exists("/media/zzggyy/disk/sqlite/")){
-  #   url.pre <<-"/media/zzggyy/disk/sqlite/"; #zgy local)
-  # }else if(file.exists("/home/zgy/sqlite/")){
-  #   url.pre <<-"/home/zgy/sqlite/"; #zgy local)
-  #   plink.path <<- "/home/zgy/plink/"
-  # } else if(file.exists("/home/le/sqlite/mgwas/")){# le local
-  #   url.pre <<-"/home/le/sqlite/mgwas/oct_2021/";
-  #   plink.path <<- "'/media/le/Seagate Portable Drive/ieugwasr/'"
-  # }else{
-  #   print("Unknown environment! No clue of the resource location!");
-  # }
-  # api.base <<- "http://api.xialab.ca"
-  
+    
   sqlite_path <- Sys.getenv("SQLITE_PATH", unset = NA)
   plink_path <- Sys.getenv("PLINK_PATH", unset = NA)
   sqlite_file <- "mgwas_202201.sqlite"
