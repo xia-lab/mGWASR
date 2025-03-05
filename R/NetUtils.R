@@ -1644,7 +1644,8 @@ CreateGraph <- function(mSetObj=NA, net.type){
     load_igraph()
   }
   
-  res <- mSetObj$dataSet$mir.res;
+  # res <- mSetObj$dataSet$mir.res; 发现错误
+  res <- mSetObj$dataSet$map.table; 
     my.edges <- res[,c(1,3)];
     my.edges <- as.data.frame(my.edges);
     nd.nms <- c(res[, 1], res[, 3]);
@@ -1668,7 +1669,7 @@ CreateGraph <- function(mSetObj=NA, net.type){
     mir.graph <-simplify( graph_from_data_frame(my.edges, directed=FALSE, vertices=NULL), edge.attr.comb="first");
     
   }else{
-    my.edges <- as.data.frame(res[, c(1,3,5:8)]);
+    # my.edges <- as.data.frame(res[, c(1,3,5:8)]);
     mir.graph <-simplify( graph_from_data_frame(my.edges, directed=FALSE, vertices=NULL), edge.attr.comb="first");
   }
   
@@ -1690,3 +1691,4 @@ CreateGraph <- function(mSetObj=NA, net.type){
   }
   
 }
+

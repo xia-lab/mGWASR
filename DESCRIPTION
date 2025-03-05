@@ -61,7 +61,8 @@ Depends:
     locuscomparer,
     progressr,
     plinkbinr,
-    VariantAnnotation
+    VariantAnnotation,
+    igraph
 Suggests: 
     knitr,
     rmarkdown,
