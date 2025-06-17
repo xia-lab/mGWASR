@@ -58,9 +58,9 @@ For detailed tutorials on how to use mGWASR, please refer to the R package vigne
 
 You can directly click on the URL to view it online:
 
-html: <https://xia-lab.github.io/mGWASR/vignettes/mgwasr.html>
+html: <https://github.com/xia-lab/mGWASR/blob/main/vignettes/mgwasr.html>
 
-pdf: <https://xia-lab.github.io/mGWASR/vignettes/mgwasr.pdf>
+pdf: <https://github.com/xia-lab/mGWASR/blob/main/vignettes/mgwasr.pdf>
 
 Also, you can view it locally after installing the R package. Note, the functions below work only if the R package vignettes were built.
 
